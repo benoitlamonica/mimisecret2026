@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  font-family: var(--font-sans);
+  color: #f7f3ea;
+  background: #101a26;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; }
+button { font: inherit; }
+
+.snow-drift {
+  background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,.9) 0 1px, transparent 1.5px),
+    radial-gradient(circle at 80% 60%, rgba(255,255,255,.7) 0 1px, transparent 1.5px);
+  background-size: 130px 130px, 190px 190px;
+}
+
+.card-shine { position: relative; overflow: hidden; }
+.card-shine::after {
+  content: "";
+  position: absolute;
+  inset: -80% 35% 20% -60%;
+  transform: rotate(25deg);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+  pointer-events: none;
+}
+
+.font-display { font-family: var(--font-display); }
+.text-balance { text-wrap: balance; }
+
+.booster-card {
+  transform: rotateY(0) scale(1);
+  transform-style: preserve-3d;
+  transition: opacity .55s ease, transform .7s cubic-bezier(.2,.8,.2,1);
+}
+
+.booster-card.is-hidden {
+  transform: rotateY(180deg) scale(.92);
+}
+
+.booster-card__back {
+  background: radial-gradient(circle at center, rgba(226,189,114,.22), transparent 42%),
+    repeating-linear-gradient(45deg, transparent 0 8px, rgba(255,255,255,.04) 8px 9px), #203747;
+}
