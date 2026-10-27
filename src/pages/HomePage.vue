@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { cards, exempleCards, rarityDetails, type Card } from '@/data/cards'
+import { exempleCards, rarityDetails, type Card } from '@/data/cards'
 import UiCard from '@/components/UiCard.vue'
 import UiButton from '@/components/UiButton.vue'
 import { useAdventCalendar } from '@/composables/useAdventCalendar'
@@ -35,7 +35,7 @@ const {
   revealedCards,
   startPackDrag,
   endPackDrag,
-} = useBoosterOpening(cards)
+} = useBoosterOpening()
 
 function openDailyBooster(day?: number) {
   if (isOpening.value || !canOpenBooster.value) return

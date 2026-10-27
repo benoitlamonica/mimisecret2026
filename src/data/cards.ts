@@ -1,10 +1,6 @@
-export type Rarity = 'Commun' | 'Rare' | 'Épique' | 'Légendaire' | 'Extraordinaire'
+import type { ReplaceSpaces } from "@/utils/types"
 
-type ReplaceSpaces<Value extends string> = Value extends `${infer Start} ${infer End}`
-  ? End extends ` ${infer Rest}`
-    ? ReplaceSpaces<`${Start} ${Rest}`>
-    : `${Start}-${ReplaceSpaces<End>}`
-  : Value
+export type Rarity = 'Commun' | 'Rare' | 'Épique' | 'Légendaire' | 'Extraordinaire'
 
 export type CardID<Name extends string> = Lowercase<ReplaceSpaces<Name>>
 

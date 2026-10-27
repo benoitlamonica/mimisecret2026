@@ -1,9 +1,9 @@
 import { onBeforeUnmount, ref } from 'vue'
 import { useLocalStorage } from '@/composables/useLocalStorage'
 import type { Card, Rarity } from '@/data/cards'
-import { drawBooster } from '@/utils/booster'
+import { drawBooster } from '@/config/booster'
 
-export function useBoosterOpening(cardPool: Card[]) {
+export function useBoosterOpening() {
   const boosterCards = ref<Card[]>([])
   const revealedCards = ref<Set<number>>(new Set())
   const isOpening = ref(false)
@@ -18,7 +18,7 @@ export function useBoosterOpening(cardPool: Card[]) {
   function openBooster() {
     if (isOpening.value) return
 
-    boosterCards.value = drawBooster(cardPool)
+    boosterCards.value = drawBooster()
     collection.value = [...collection.value, ...boosterCards.value]
     revealedCards.value = new Set()
     boosterPhase.value = 'pack'

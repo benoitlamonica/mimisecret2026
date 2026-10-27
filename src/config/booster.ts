@@ -1,4 +1,5 @@
 import type { Card, Rarity } from '@/data/cards'
+import { cards } from '@/data/cards'
 
 const STANDARD_RARITIES: Array<{ rarity: Rarity; threshold: number }> = [
   { rarity: 'Extraordinaire', threshold: 0.1 },
@@ -15,8 +16,14 @@ const GUARANTEED_RARITIES: Array<{ rarity: Rarity; threshold: number }> = [
   { rarity: 'Rare', threshold: 100 },
 ]
 
-function chooseRarity(guaranteedRare: boolean): Rarity {
-  const table = guaranteedRare ? GUARANTEED_RARITIES : STANDARD_RARITIES
+const SPECIAL_RARITIES: Array<{ rarity: Rarity; threshold: number }> = [
+  { rarity: 'Extraordinaire', threshold: 20 },
+  { rarity: 'Légendaire', threshold: 50 },
+  { rarity: 'Épique', threshold: 100 },
+]
+
+function chooseRarity(guaranteedRare: boolean, specialBooster?: boolean): Rarity {
+  const table = specialBooster ? SPECIAL_RARITIES : guaranteedRare ? GUARANTEED_RARITIES : STANDARD_RARITIES
   const roll = Math.random() * 100
 
   return table.find(({ threshold }) => roll < threshold)?.rarity ?? 'Commun'
@@ -34,13 +41,24 @@ function chooseCard(cards: Card[], rarity: Rarity): Card {
   return card
 }
 
-export function drawBooster(cards: Card[]): Card[] {
+export function drawBooster(): Card[] {
   if (cards.length === 0) {
     throw new Error('Impossible d’ouvrir un booster : le catalogue est vide.')
   }
 
   return Array.from({ length: 5 }, (_, index) => {
     const rarity = chooseRarity(index === 4)
+    return chooseCard(cards, rarity)
+  })
+}
+
+export function drawSpecialBooster(): Card[] {
+  if (cards.length === 0) {
+    throw new Error('Impossible d’ouvrir un booster spécial : le catalogue est vide.')
+  }
+
+  return Array.from({ length: 5 }, () => {
+    const rarity = chooseRarity(false, true)
     return chooseCard(cards, rarity)
   })
 }
