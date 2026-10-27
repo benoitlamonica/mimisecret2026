@@ -1,7 +1,7 @@
 import { onBeforeUnmount, ref } from 'vue'
 import { useLocalStorage } from '@/composables/useLocalStorage'
 import type { Card, Rarity } from '@/data/cards'
-import { drawBooster } from '@/config/booster'
+import { drawBooster, drawSpecialBooster } from '@/config/booster'
 
 export function useBoosterOpening() {
   const boosterCards = ref<Card[]>([])
@@ -15,10 +15,10 @@ export function useBoosterOpening() {
   let cutTimeout: ReturnType<typeof setTimeout> | undefined
   let dragStartX = 0
 
-  function openBooster() {
+  function openCards(cards: Card[]) {
     if (isOpening.value) return
 
-    boosterCards.value = drawBooster()
+    boosterCards.value = cards
     collection.value = [...collection.value, ...boosterCards.value]
     revealedCards.value = new Set()
     boosterPhase.value = 'pack'
@@ -26,6 +26,14 @@ export function useBoosterOpening() {
     isDraggingPack.value = false
     packDragProgress.value = 0
     isOpening.value = true
+  }
+
+  function openBooster() {
+    openCards(drawBooster())
+  }
+
+  function openSpecialBooster() {
+    openCards(drawSpecialBooster())
   }
 
   function startPackDrag(clientX: number) {
@@ -105,6 +113,7 @@ export function useBoosterOpening() {
     movePackDrag,
     isOpening,
     openBooster,
+    openSpecialBooster,
     packDragProgress,
     rarityEffect,
     revealCard,

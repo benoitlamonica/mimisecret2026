@@ -1,7 +1,9 @@
 import type { Card, Rarity } from '@/data/cards'
 import { cards } from '@/data/cards'
 
-const STANDARD_RARITIES: Array<{ rarity: Rarity; threshold: number }> = [
+export type RarityTable = Array<{ rarity: Rarity; threshold: number }>
+
+const STANDARD_RARITIES: RarityTable = [
   { rarity: 'Extraordinaire', threshold: 0.1 },
   { rarity: 'Légendaire', threshold: 1.1 },
   { rarity: 'Épique', threshold: 6.1 },
@@ -9,23 +11,21 @@ const STANDARD_RARITIES: Array<{ rarity: Rarity; threshold: number }> = [
   { rarity: 'Commun', threshold: 100 },
 ]
 
-const GUARANTEED_RARITIES: Array<{ rarity: Rarity; threshold: number }> = [
+const GUARANTEED_RARITIES: RarityTable = [
   { rarity: 'Extraordinaire', threshold: 1 },
   { rarity: 'Légendaire', threshold: 11 },
   { rarity: 'Épique', threshold: 46 },
   { rarity: 'Rare', threshold: 100 },
 ]
 
-const SPECIAL_RARITIES: Array<{ rarity: Rarity; threshold: number }> = [
-  { rarity: 'Extraordinaire', threshold: 20 },
-  { rarity: 'Légendaire', threshold: 50 },
-  { rarity: 'Épique', threshold: 100 },
+const SPECIAL_RARITIES: RarityTable = [
+  { rarity: 'Extraordinaire', threshold: 10 },
+  { rarity: 'Légendaire', threshold: 33 },
+  { rarity: 'Épique', threshold: 50 },
+  { rarity: 'Rare', threshold: 100 },
 ]
 
-function chooseRarity(guaranteedRare: boolean, specialBooster?: boolean): Rarity {
-  const table = specialBooster ? SPECIAL_RARITIES : guaranteedRare ? GUARANTEED_RARITIES : STANDARD_RARITIES
-  const roll = Math.random() * 100
-
+function chooseRarity(table: RarityTable, roll: number): Rarity {
   return table.find(({ threshold }) => roll < threshold)?.rarity ?? 'Commun'
 }
 
@@ -47,7 +47,7 @@ export function drawBooster(): Card[] {
   }
 
   return Array.from({ length: 5 }, (_, index) => {
-    const rarity = chooseRarity(index === 4)
+    const rarity = chooseRarity(index === 4 ? GUARANTEED_RARITIES : STANDARD_RARITIES, Math.random() * 100)
     return chooseCard(cards, rarity)
   })
 }
@@ -58,7 +58,7 @@ export function drawSpecialBooster(): Card[] {
   }
 
   return Array.from({ length: 5 }, () => {
-    const rarity = chooseRarity(false, true)
+    const rarity = chooseRarity(SPECIAL_RARITIES, Math.random() * 100)
     return chooseCard(cards, rarity)
   })
 }

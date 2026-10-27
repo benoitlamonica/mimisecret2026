@@ -4,6 +4,7 @@ import { useLocalStorage } from '@/composables/useLocalStorage'
 
 interface AdventProgress {
   claimedDays: number[]
+  specialClaimedDays?: number[]
 }
 
 function toLocalDate(date: string) {
@@ -34,9 +35,16 @@ export function useAdventCalendar() {
       ? progress.value.claimedDays.filter((day) => day >= 1 && day <= totalDays)
       : []
   ))
+  const specialClaimedDays = computed(() => (
+    Array.isArray(progress.value.specialClaimedDays)
+      ? progress.value.specialClaimedDays.filter((day) => day >= 1 && day <= totalDays)
+      : []
+  ))
 
   const availableBoosters = computed(() => Math.max(0, unlockedDays.value - claimedDays.value.length))
+  const availableSpecialBoosters = computed(() => Math.max(0, unlockedDays.value - specialClaimedDays.value.length))
   const canOpenBooster = computed(() => availableBoosters.value > 0)
+  const canOpenSpecialBooster = computed(() => availableSpecialBoosters.value > 0)
 
   function isDayClaimed(day: number) {
     return claimedDays.value.includes(day)
@@ -64,13 +72,32 @@ export function useAdventCalendar() {
     return day ? claimDay(day) : null
   }
 
+  function isSpecialDayClaimed(day: number) {
+    return specialClaimedDays.value.includes(day)
+  }
+
+  function claimSpecialDay(day: number) {
+    if (!isDayUnlocked(day) || isSpecialDayClaimed(day)) return null
+
+    progress.value = {
+      ...progress.value,
+      specialClaimedDays: [...specialClaimedDays.value, day],
+    }
+
+    return day
+  }
+
   return {
     availableBoosters,
+    availableSpecialBoosters,
     canOpenBooster,
+    canOpenSpecialBooster,
     claimDay,
     claimBooster,
+    claimSpecialDay,
     isDayClaimed,
     isDayUnlocked,
+    isSpecialDayClaimed,
     totalDays,
     unlockedDays,
   }

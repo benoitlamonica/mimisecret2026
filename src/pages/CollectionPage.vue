@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import AppHeader from '@/components/AppHeader.vue'
 import UiButton from '@/components/UiButton.vue'
 import UiCard from '@/components/UiCard.vue'
 import { useLocalStorage } from '@/composables/useLocalStorage'
@@ -29,13 +30,7 @@ const countByRarity = (rarity: Rarity) => collection.value.filter((card) => card
 
 <template>
   <div class="min-h-screen bg-[#101a26] text-[#f7f3ea]">
-    <header class="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
-      <a href="/" class="flex items-center gap-3" aria-label="Retour à l'accueil">
-        <span class="grid h-10 w-10 place-items-center rounded-full border border-[#d6b975]/40 bg-[#d6b975]/10 text-xl text-[#f2d58d]">✦</span>
-        <span class="font-display text-xl tracking-wide text-[#fff8e9]">Le Secret de Mimi</span>
-      </a>
-      <UiButton href="/">Retour à l’accueil</UiButton>
-    </header>
+    <AppHeader />
 
     <main class="mx-auto max-w-7xl px-6 pb-24 pt-12 lg:px-10">
       <section class="snow-drift relative overflow-hidden rounded-4xl border border-white/10 bg-[#172536] px-6 py-12 md:px-12">
