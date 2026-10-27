@@ -1,15 +1,17 @@
 import type { Card, Rarity } from '@/data/cards'
 
 const STANDARD_RARITIES: Array<{ rarity: Rarity; threshold: number }> = [
-  { rarity: 'Légendaire', threshold: 1 },
-  { rarity: 'Épique', threshold: 6 },
-  { rarity: 'Rare', threshold: 16 },
+  { rarity: 'Extraordinaire', threshold: 0.1 },
+  { rarity: 'Légendaire', threshold: 1.1 },
+  { rarity: 'Épique', threshold: 6.1 },
+  { rarity: 'Rare', threshold: 16.1 },
   { rarity: 'Commun', threshold: 100 },
 ]
 
 const GUARANTEED_RARITIES: Array<{ rarity: Rarity; threshold: number }> = [
-  { rarity: 'Légendaire', threshold: 10 },
-  { rarity: 'Épique', threshold: 45 },
+  { rarity: 'Extraordinaire', threshold: 1 },
+  { rarity: 'Légendaire', threshold: 11 },
+  { rarity: 'Épique', threshold: 46 },
   { rarity: 'Rare', threshold: 100 },
 ]
 

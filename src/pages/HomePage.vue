@@ -1,66 +1,25 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { cards, exempleCards, rarityDetails, type Card, type Rarity } from '@/data/cards'
+import { cards, exempleCards, rarityDetails, type Card } from '@/data/cards'
 import UiCard from '@/components/UiCard.vue'
 import UiButton from '@/components/UiButton.vue'
-import { useLocalStorage } from '@/composables/useLocalStorage'
-import { drawBooster } from '@/utils/booster'
+import { useBoosterOpening } from '@/composables/useBoosterOpening'
 
 const selectedCard = ref<Card | null>(null)
-const boosterCards = ref<Card[]>([])
-const revealedCards = ref<Set<number>>(new Set())
-const isOpening = ref(false)
-const boosterPhase = ref<'pack' | 'cards'>('pack')
-const isCutting = ref(false)
 const openedDay = ref(1)
-const { value: collection } = useLocalStorage<Card[]>('mimi-secret-collection', [])
-
-function openBooster() {
-  if (isOpening.value) return
-
-  boosterCards.value = drawBooster(cards)
-  collection.value = [...collection.value, ...boosterCards.value]
-  revealedCards.value = new Set()
-  boosterPhase.value = 'pack'
-  isCutting.value = false
-  selectedCard.value = null
-  isOpening.value = true
-}
-
-function cutBooster() {
-  if (isCutting.value) return
-
-  isCutting.value = true
-  window.setTimeout(() => {
-    boosterPhase.value = 'cards'
-    isCutting.value = false
-  }, 850)
-}
-
-function revealCard(index: number) {
-  if (boosterPhase.value !== 'cards' || revealedCards.value.has(index)) return
-
-  revealedCards.value = new Set(revealedCards.value).add(index)
-}
-
-function isCardRevealed(index: number) {
-  return revealedCards.value.has(index)
-}
-
-function rarityEffect(rarity: Rarity) {
-  return {
-    Commun: 'effect-common',
-    Rare: 'effect-rare',
-    Épique: 'effect-epic',
-    Légendaire: 'effect-legendary',
-  }[rarity]
-}
-
-function closeBooster() {
-  if (revealedCards.value.size === boosterCards.value.length) {
-    isOpening.value = false
-  }
-}
+const {
+  boosterCards,
+  boosterPhase,
+  closeBooster,
+  cutBooster,
+  isCardRevealed,
+  isCutting,
+  isOpening,
+  openBooster,
+  rarityEffect,
+  revealCard,
+  revealedCards,
+} = useBoosterOpening(cards)
 </script>
 
 <template>
@@ -94,7 +53,7 @@ function closeBooster() {
             </div>
             <div class="mt-12 flex items-center gap-8 border-t border-white/10 pt-6 text-sm text-[#8fa0aa]">
               <span><strong class="mr-1 text-xl font-normal text-[#f1e8d2]">24</strong> jours de magie</span>
-              <span><strong class="mr-1 text-xl font-normal text-[#f1e8d2]">4</strong> raretés</span>
+              <span><strong class="mr-1 text-xl font-normal text-[#f1e8d2]">5</strong> raretés</span>
             </div>
           </div>
 
@@ -133,8 +92,8 @@ function closeBooster() {
         <div class="mx-auto max-w-7xl">
           <div class="mb-12 max-w-xl"><p class="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">À collectionner</p><h2 class="font-display text-5xl text-[#fff8e9]">Chaque carte a son éclat.</h2><p class="mt-5 leading-relaxed text-[#94a8b0]">Des trouvailles délicates aux trésors les plus convoités, quatre niveaux de rareté rendent chaque ouverture unique.</p></div>
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <div v-for="rarity in rarityDetails" :key="rarity.name" :class="`rarity-${rarity.color}`" class="rounded-2xl border border-white/10 bg-[#1b2c3b] p-6 transition hover:-translate-y-1">
-              <div class="mb-12 flex items-center justify-between"><span class="font-display text-4xl">{{ rarity.name === 'Légendaire' ? '★' : rarity.name === 'Épique' ? '✧' : rarity.name === 'Rare' ? '◆' : '✦' }}</span><span class="text-[10px] uppercase tracking-[.2em] text-[#84969e]">01 / 04</span></div>
+            <div v-for="(rarity, index) in rarityDetails" :key="rarity.name" :class="`rarity-${rarity.color}`" class="rounded-2xl border border-white/10 bg-[#1b2c3b] p-6 transition hover:-translate-y-1">
+              <div class="mb-12 flex items-center justify-between"><span class="font-display text-4xl">{{ rarity.name === 'Extraordinaire' ? '✹' : rarity.name === 'Légendaire' ? '★' : rarity.name === 'Épique' ? '✧' : rarity.name === 'Rare' ? '◆' : '✦' }}</span><span class="text-[10px] uppercase tracking-[.2em] text-[#84969e]">{{ String(index + 1).padStart(2, '0') }} / {{ rarityDetails.length }}</span></div>
               <h3 class="font-display text-2xl text-[#f8f2e5]">{{ rarity.name }}</h3><p class="mt-2 text-sm leading-relaxed text-[#8fa0aa]">{{ rarity.description }}</p>
             </div>
           </div>

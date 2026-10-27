@@ -1,4 +1,4 @@
-export type Rarity = 'Commun' | 'Rare' | 'Épique' | 'Légendaire'
+export type Rarity = 'Commun' | 'Rare' | 'Épique' | 'Légendaire' | 'Extraordinaire'
 
 type ReplaceSpaces<Value extends string> = Value extends `${infer Start} ${infer End}`
   ? End extends ` ${infer Rest}`
@@ -135,13 +135,18 @@ export const legendaryCards: CardDefinition[] = [
   { name: 'Boubou', type: 'Trésor du cœur', description: 'Un nom qui porte une histoire, une présence et une chaleur que l’on garde près de soi.', power: 'Lien éternel' },
   { name: 'Rocket', type: 'Compagnon de Noël', description: 'Le petit gardien à quatre pattes qui rend chaque fête plus vivante.', power: 'Ronronnement magique' },
   { name: 'Papa Noël', type: 'Figure légendaire', description: 'Le visiteur de la nuit qui fait voyager les rêves jusque sous le sapin.', power: 'Tournée enchantée' },
-  { name: 'L’étoile Mathilde', type: 'Lumière du souvenir', description: 'Une étoile douce qui veille dans le ciel et garde avec tendresse la mémoire de Mathilde.', power: 'Amour qui demeure' },
   { name: 'Le réveillon de Noël', type: 'Nuit sacrée', description: 'La grande soirée où les cœurs se rapprochent autour d’une table pleine de vie.', power: 'Minuit enchanté' },
   { name: 'La magie de Noël', type: 'Essence des fêtes', description: 'Cette sensation rare qui transforme les petits instants en souvenirs inoubliables.', power: 'Merveille absolue' },
   { name: 'Le foyer réuni', type: 'Trésor familial', description: 'Tous ceux qui comptent au même endroit, pour une soirée qui restera longtemps.', power: 'Cercle de chaleur' },
   { name: 'Le vœu exaucé', type: 'Miracle de Noël', description: 'Un souhait devenu réalité au moment où personne ne l’attendait plus.', power: 'Espoir accompli' },
   { name: 'La nuit de Noël', type: 'Moment légendaire', description: 'Une nuit suspendue, pleine de lumières, de douceur et de promesses.', power: 'Éternité blanche' },
   { name: 'L’esprit de Noël', type: 'Relique du solstice', description: 'La force invisible qui invite à aimer, partager et prendre soin les uns des autres.', power: 'Générosité infinie' },
+]
+
+export const extraordinaryCards: CardDefinition[] = [
+  { name: 'L’étoile Mathilde', type: 'Lumière du souvenir', description: 'Une étoile douce qui veille dans le ciel et garde avec tendresse la mémoire de Mathilde.', power: 'Amour qui demeure' },
+  { name: 'Dany', type: 'Maman exceptionnelle', description: 'La présence chaleureuse et aimante qui rend chaque moment spécial.', power: 'Amour infini' },
+  { name: 'Florent', type: 'Papa attentionné', description: 'La présence rassurante et bienveillante qui rend chaque instant précieux.', power: 'Amour constant' }
 ]
 
 function addCardData(
@@ -164,6 +169,7 @@ export const cards: Card[] = [
   ...addCardData(rareCards, 'Rare', 'blue', '◆'),
   ...addCardData(epicCards, 'Épique', 'violet', '✧'),
   ...addCardData(legendaryCards, 'Légendaire', 'gold', '★'),
+  ...addCardData(extraordinaryCards, 'Extraordinaire', 'rainbow', '♥'),
 ]
 
 // Take 1 common, 1 rare, 1 epic, and 1 legendary card for example
@@ -179,4 +185,5 @@ export const rarityDetails: Array<{ name: Rarity; description: string; color: st
   { name: 'Rare', description: 'Des compagnons qu’on n’oublie pas', color: 'rare' },
   { name: 'Épique', description: 'Des histoires vraiment extraordinaires', color: 'epic' },
   { name: 'Légendaire', description: 'Une magie que l’on ne voit qu’une fois', color: 'legendary' },
+  { name: 'Extraordinaire', description: 'Une carte unique, cachée dans les étoiles', color: 'extraordinary' },
 ]

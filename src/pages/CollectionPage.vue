@@ -7,7 +7,7 @@ import { cards, type Card, type Rarity } from '@/data/cards'
 
 type Filter = 'Toutes' | Rarity
 
-const filters: Filter[] = ['Toutes', 'Commun', 'Rare', 'Épique', 'Légendaire']
+const filters: Filter[] = ['Toutes', 'Commun', 'Rare', 'Épique', 'Légendaire', 'Extraordinaire']
 const activeFilter = ref<Filter>('Toutes')
 const selectedCard = ref<Card | null>(null)
 const { value: collection } = useLocalStorage<Card[]>('mimi-secret-collection', [])
@@ -68,7 +68,7 @@ const countByRarity = (rarity: Rarity) => collection.value.filter((card) => card
 
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div v-for="{ card, count } in filteredCards" :key="card.id" class="relative">
-            <UiCard :card="card" :disabled="count === 0" @click="selectedCard = card" />
+            <UiCard :card="card" :disabled="count === 0" :mystery="card.rarity === 'Extraordinaire' && count === 0" @click="selectedCard = card" />
             <span v-if="count > 0" class="pointer-events-none absolute right-3 top-3 rounded-full bg-[#e2bd72] px-2.5 py-1 text-[10px] font-bold text-[#172536]">{{ count }} exemplaire{{ count > 1 ? 's' : '' }}</span>
             <span v-else class="pointer-events-none absolute right-3 top-3 rounded-full bg-[#101a26]/80 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#71858e]">À découvrir</span>
           </div>

@@ -74,6 +74,104 @@ button { font: inherit; }
   line-height: 1;
 }
 
+.ui-card--extraordinary > div {
+  background: linear-gradient(120deg, #ff7fa8, #ffd66e, #9be7ff, #d6a5ff, #ff7fa8);
+  background-size: 300% 300%;
+  animation: rainbow-frame 4s ease infinite;
+}
+
+.ui-card--legendary .ui-card__surface {
+  background:
+    radial-gradient(circle at 50% 32%, rgba(255, 218, 118, .38), transparent 34%),
+    linear-gradient(135deg, rgba(154, 91, 24, .38), rgba(244, 208, 111, .24)),
+    #2a2730;
+  box-shadow: inset 0 0 20px rgba(230, 182, 76, .14), 0 0 10px rgba(218, 164, 62, .08);
+}
+
+.ui-card--epic .ui-card__surface {
+  background:
+    radial-gradient(circle at 50% 32%, rgba(245, 174, 211, .3), transparent 34%),
+    linear-gradient(135deg, rgba(125, 75, 135, .28), rgba(226, 151, 196, .2)),
+    #292632;
+  box-shadow: inset 0 0 20px rgba(222, 139, 196, .12), 0 0 10px rgba(205, 134, 255, .08);
+}
+
+.ui-card--rare .ui-card__surface {
+  background:
+    radial-gradient(circle at 50% 32%, rgba(147, 220, 235, .28), transparent 34%),
+    linear-gradient(135deg, rgba(55, 119, 144, .3), rgba(151, 221, 231, .16)),
+    #202d35;
+  box-shadow: inset 0 0 20px rgba(116, 205, 231, .12), 0 0 10px rgba(118, 205, 231, .07);
+}
+
+.ui-card--extraordinary .ui-card__surface {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255, 242, 168, .28), transparent 25%),
+    linear-gradient(135deg, rgba(255, 127, 168, .18), rgba(155, 231, 255, .16), rgba(214, 165, 255, .2)),
+    #172536;
+  background-size: 100% 100%, 300% 300%, 100% 100%;
+  animation: rainbow-surface 5s ease infinite;
+  box-shadow: inset 0 0 45px rgba(255, 220, 145, .2), 0 0 30px rgba(180, 218, 255, .22);
+}
+
+.ui-card--extraordinary .ui-card__surface::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -45%;
+  background: conic-gradient(from 0deg, #ff6f91, #ffd86e, #8ff0c0, #7bdcff, #bd9cff, #ff6f91);
+  filter: blur(24px);
+  opacity: .7;
+  animation: rainbow-glow-spin 6s linear infinite;
+}
+
+.ui-card--extraordinary .ui-card__surface > * {
+  position: relative;
+  z-index: 1;
+}
+
+.ui-card--extraordinary .ui-card__meta,
+.ui-card--extraordinary .ui-card__name,
+.ui-card--extraordinary .ui-card__description,
+.ui-card--extraordinary .ui-card__mystery {
+  color: #fff !important;
+}
+
+.ui-card__mystery {
+  color: #fff1a8;
+}
+
+.ui-card__mystery-mark {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 30cqw, 7rem);
+  line-height: .8;
+  text-shadow: 0 0 12px #fff3a8, 0 0 35px #ff9cce, 0 0 65px #8ce8ff;
+  animation: mystery-pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes rainbow-frame {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes rainbow-surface {
+  0%, 100% { background-position: 0% 0%, 0% 50%, 0% 0%; }
+  50% { background-position: 0% 0%, 100% 50%, 0% 0%; }
+}
+
+@keyframes rainbow-glow-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes mystery-pulse {
+  from { opacity: .7; transform: scale(.94); }
+  to { opacity: 1; transform: scale(1.06); }
+}
+
 .booster-card {
   transform: rotateY(0) scale(1);
   transform-style: preserve-3d;
@@ -219,6 +317,13 @@ button { font: inherit; }
   box-shadow: 0 0 25px 12px #fff4bb, 0 0 65px 28px rgba(245,191,79,.8), 0 0 125px 50px rgba(188,91,28,.4);
 }
 
+.effect-extraordinary {
+  animation: extraordinary-rainbow 2.4s ease-in-out infinite alternate;
+  background: conic-gradient(from 0deg, #ff8db8, #ffe27b, #9de8ff, #c99cff, #ff8db8);
+  filter: blur(8px);
+  box-shadow: 0 0 35px 12px rgba(255,211,125,.8), 0 0 90px 30px rgba(197,135,255,.55);
+}
+
 @keyframes common-glow {
   from { opacity: 0; transform: scale(.7); }
   to { opacity: .6; transform: scale(1.15); }
@@ -241,6 +346,11 @@ button { font: inherit; }
   25% { opacity: 1; transform: scale(.8); }
   60% { opacity: .85; transform: scale(1.3); }
   100% { opacity: .45; transform: scale(1.7); }
+}
+
+@keyframes extraordinary-rainbow {
+  from { opacity: .55; transform: scale(.95) rotate(0deg); }
+  to { opacity: 1; transform: scale(1.35) rotate(18deg); }
 }
 
 @media (max-width: 640px) {
