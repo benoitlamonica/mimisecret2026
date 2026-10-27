@@ -9,8 +9,11 @@ export function useBoosterOpening(cardPool: Card[]) {
   const isOpening = ref(false)
   const boosterPhase = ref<'pack' | 'cards'>('pack')
   const isCutting = ref(false)
+  const isDraggingPack = ref(false)
+  const packDragProgress = ref(0)
   const { value: collection } = useLocalStorage<Card[]>('mimi-secret-collection', [])
   let cutTimeout: ReturnType<typeof setTimeout> | undefined
+  let dragStartX = 0
 
   function openBooster() {
     if (isOpening.value) return
@@ -20,13 +23,40 @@ export function useBoosterOpening(cardPool: Card[]) {
     revealedCards.value = new Set()
     boosterPhase.value = 'pack'
     isCutting.value = false
+    isDraggingPack.value = false
+    packDragProgress.value = 0
     isOpening.value = true
+  }
+
+  function startPackDrag(clientX: number) {
+    if (boosterPhase.value !== 'pack' || isCutting.value) return
+
+    dragStartX = clientX
+    isDraggingPack.value = true
+  }
+
+  function movePackDrag(clientX: number) {
+    if (!isDraggingPack.value) return
+
+    packDragProgress.value = Math.min(100, Math.abs(clientX - dragStartX) / 1.2)
+  }
+
+  function endPackDrag() {
+    if (!isDraggingPack.value) return
+
+    isDraggingPack.value = false
+    if (packDragProgress.value >= 100) {
+      cutBooster()
+    } else {
+      packDragProgress.value = 0
+    }
   }
 
   function cutBooster() {
     if (isCutting.value) return
 
     isCutting.value = true
+    packDragProgress.value = 100
     cutTimeout = setTimeout(() => {
       boosterPhase.value = 'cards'
       isCutting.value = false
@@ -71,10 +101,15 @@ export function useBoosterOpening(cardPool: Card[]) {
     cutBooster,
     isCardRevealed,
     isCutting,
+    isDraggingPack,
+    movePackDrag,
     isOpening,
     openBooster,
+    packDragProgress,
     rarityEffect,
     revealCard,
     revealedCards,
+    startPackDrag,
+    endPackDrag,
   }
 }

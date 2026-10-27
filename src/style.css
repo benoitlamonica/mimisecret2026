@@ -193,6 +193,63 @@ button { font: inherit; }
   opacity: .14;
 }
 
+.booster-pack {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.booster-pack:disabled {
+  cursor: wait;
+}
+
+.booster-pack__body {
+  background:
+    linear-gradient(150deg, rgba(226, 189, 114, .14), transparent 25%),
+    linear-gradient(330deg, rgba(58, 112, 132, .42), transparent 40%),
+    #203747;
+  transition: transform .2s ease;
+}
+
+.booster-pack.is-dragging .booster-pack__body {
+  transform: translateX(var(--tear-progress)) rotate(1deg);
+}
+
+.booster-pack__crimp {
+  position: absolute;
+  z-index: 3;
+  left: -2px;
+  right: -2px;
+  height: 12px;
+  background: #d6b972;
+  clip-path: polygon(0 0, 4% 100%, 8% 0, 12% 100%, 16% 0, 20% 100%, 24% 0, 28% 100%, 32% 0, 36% 100%, 40% 0, 44% 100%, 48% 0, 52% 100%, 56% 0, 60% 100%, 64% 0, 68% 100%, 72% 0, 76% 100%, 80% 0, 84% 100%, 88% 0, 92% 100%, 96% 0, 100% 100%, 100% 0);
+}
+
+.booster-pack__crimp--top {
+  top: -3px;
+}
+
+.booster-pack__crimp--bottom {
+  bottom: -3px;
+  transform: rotate(180deg);
+}
+
+.booster-pack__seal {
+  z-index: 2;
+  border-bottom: 1px dashed rgba(226, 189, 114, .5);
+  background: rgba(15, 27, 38, .36);
+}
+
+.booster-pack__tear-line {
+  border-left: 1px dashed rgba(226, 189, 114, .45);
+  padding-left: .75rem;
+  color: #b6c3c4;
+}
+
 .booster-pack__scissors {
   transform: rotate(-18deg);
   transition: transform .7s ease, right .7s ease;
