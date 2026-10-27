@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { cards, rarityDetails, type Card } from '@/data/cards'
+import { cards, exempleCards, rarityDetails, type Card, type Rarity } from '@/data/cards'
 import UiCard from '@/components/UiCard.vue'
 import UiButton from '@/components/UiButton.vue'
 import { useLocalStorage } from '@/composables/useLocalStorage'
@@ -8,8 +8,10 @@ import { drawBooster } from '@/utils/booster'
 
 const selectedCard = ref<Card | null>(null)
 const boosterCards = ref<Card[]>([])
-const revealedCards = ref(0)
+const revealedCards = ref<Set<number>>(new Set())
 const isOpening = ref(false)
+const boosterPhase = ref<'pack' | 'cards'>('pack')
+const isCutting = ref(false)
 const openedDay = ref(1)
 const { value: collection } = useLocalStorage<Card[]>('mimi-secret-collection', [])
 
@@ -18,23 +20,44 @@ function openBooster() {
 
   boosterCards.value = drawBooster(cards)
   collection.value = [...collection.value, ...boosterCards.value]
-  revealedCards.value = 0
+  revealedCards.value = new Set()
+  boosterPhase.value = 'pack'
+  isCutting.value = false
   selectedCard.value = null
   isOpening.value = true
-  revealNextCard()
 }
 
-function revealNextCard() {
-  if (revealedCards.value >= boosterCards.value.length) return
+function cutBooster() {
+  if (isCutting.value) return
 
+  isCutting.value = true
   window.setTimeout(() => {
-    revealedCards.value += 1
-    revealNextCard()
-  }, revealedCards.value === 0 ? 500 : 700)
+    boosterPhase.value = 'cards'
+    isCutting.value = false
+  }, 850)
+}
+
+function revealCard(index: number) {
+  if (boosterPhase.value !== 'cards' || revealedCards.value.has(index)) return
+
+  revealedCards.value = new Set(revealedCards.value).add(index)
+}
+
+function isCardRevealed(index: number) {
+  return revealedCards.value.has(index)
+}
+
+function rarityEffect(rarity: Rarity) {
+  return {
+    Commun: 'effect-common',
+    Rare: 'effect-rare',
+    Épique: 'effect-epic',
+    Légendaire: 'effect-legendary',
+  }[rarity]
 }
 
 function closeBooster() {
-  if (revealedCards.value === boosterCards.value.length) {
+  if (revealedCards.value.size === boosterCards.value.length) {
     isOpening.value = false
   }
 }
@@ -121,7 +144,7 @@ function closeBooster() {
       <section id="cartes" class="mx-auto max-w-7xl px-6 py-24 lg:px-10">
         <div class="mb-12 flex items-end justify-between"><div><p class="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Un avant-goût</p><h2 class="font-display text-5xl text-[#fff8e9]">Les premières merveilles</h2></div><span class="hidden text-sm text-[#778b95] md:block">4 cartes • Collection 01</span></div>
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <UiCard v-for="card in cards" :key="card.id" :card="card" :rarity="card.rarity" @click="selectedCard = card" />
+          <UiCard v-for="card in exempleCards" :key="card.id" :card="card" :rarity="card.rarity" @click="selectedCard = card" />
         </div>
       </section>
     </main>
@@ -133,30 +156,41 @@ function closeBooster() {
         <div class="mb-8 flex items-start justify-between">
           <div>
             <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Booster du jour {{ String(openedDay).padStart(2, '0') }}</p>
-            <h2 class="mt-2 font-display text-5xl text-[#fff8e9] md:text-6xl">Une surprise à découvrir</h2>
+            <h2 class="mt-2 font-display text-5xl text-[#fff8e9] md:text-6xl">{{ boosterPhase === 'pack' ? 'Le paquet est arrivé' : 'Révèle tes cartes' }}</h2>
           </div>
-          <button aria-label="Fermer le booster" class="text-3xl text-[#8fa0aa] transition hover:text-white" :disabled="revealedCards < boosterCards.length" @click="closeBooster">×</button>
+          <button aria-label="Fermer le booster" class="text-3xl text-[#8fa0aa] transition hover:text-white" :disabled="boosterPhase === 'pack' || revealedCards.size < boosterCards.length" @click="closeBooster">×</button>
         </div>
-        <p class="mb-10 text-[#9cafb6]">Les cartes apparaissent une à une. La dernière cache toujours une rareté au minimum.</p>
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          <div v-for="(card, index) in boosterCards" :key="`${card.id}-${index}`" :class="{ 'is-hidden': index >= revealedCards }" class="booster-card">
-            <div class="relative">
-              <div v-if="index >= revealedCards" class="booster-card__back absolute inset-0 grid aspect-[.72] place-items-center rounded-2xl border border-[#d6b975]/30 shadow-2xl">
-                <span class="font-display text-6xl text-[#e2bd72]/60">✦</span>
-              </div>
-              <div :class="index >= revealedCards ? 'opacity-0' : 'opacity-100'" class="rounded-2xl border border-[#e2bd72]/40 bg-[#172536] p-4 shadow-[0_0_35px_rgba(226,189,114,.18)] transition-opacity duration-300">
-                <div class="flex aspect-[.72] flex-col justify-between rounded-xl border border-white/10 bg-[#203747] p-4">
-                  <div class="flex justify-between text-[9px] uppercase tracking-widest text-[#b5c3c4]"><span>{{ card.type }}</span><span>{{ card.symbol }}</span></div>
-                  <div class="grid place-items-center text-7xl text-[#e7c56e] drop-shadow-[0_0_20px_currentColor]">{{ card.symbol }}</div>
-                  <div class="border-t border-white/15 pt-3"><p class="font-display text-xl text-[#fff8e9]">{{ card.name }}</p><span class="mt-2 inline-block rounded-full bg-[#fff0bc] px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-[#95601d]">{{ card.rarity }}</span></div>
-                </div>
+        <p class="mb-10 text-[#9cafb6]">{{ boosterPhase === 'pack' ? 'Découpe le paquet pour faire apparaître les cinq cartes du jour.' : 'Clique sur chaque carte pour la retourner. La dernière cache toujours une rareté au minimum.' }}</p>
+
+        <div v-if="boosterPhase === 'pack'" class="flex flex-col items-center justify-center py-8">
+          <div :class="{ 'is-cutting': isCutting }" class="booster-pack relative h-80 w-56">
+            <div class="booster-pack__glow absolute -inset-12 rounded-full"></div>
+            <div class="booster-pack__body card-shine relative flex h-full flex-col justify-between rounded-2xl border-2 border-[#e2bd72]/70 bg-[#203747] p-6 text-center shadow-[0_20px_70px_rgba(0,0,0,.45)]">
+              <div class="flex justify-between text-[9px] uppercase tracking-[.25em] text-[#e2bd72]"><span>Booster 01</span><span>✦</span></div>
+              <div><div class="mx-auto mb-4 grid h-28 w-28 place-items-center rounded-full border border-[#e2bd72]/40 text-7xl text-[#e2bd72]">✦</div><p class="font-display text-4xl text-[#fff8e9]">Le Secret</p><p class="mt-2 text-[10px] uppercase tracking-[.25em] text-[#93a7ae]">Collection d’hiver</p></div>
+              <div class="border-t border-[#e2bd72]/20 pt-3 text-[9px] uppercase tracking-widest text-[#93a7ae]">5 cartes à découvrir</div>
+            </div>
+            <span class="booster-pack__scissors absolute -right-10 top-1/2 text-4xl text-[#f4d994]">✂</span>
+          </div>
+          <UiButton :disabled="isCutting" class="mt-10 px-8 py-4" @click="cutBooster">{{ isCutting ? 'Le paquet s’ouvre…' : 'Découper le booster' }} <span class="ml-2">✂</span></UiButton>
+        </div>
+
+        <div v-else class="booster-circle">
+          <div v-for="(card, index) in boosterCards" :key="`${card.id}-${index}`" :style="{ '--card-index': index }" class="booster-circle-card">
+            <div :class="{ 'is-revealed': isCardRevealed(index) }" class="booster-flip">
+              <button class="booster-card-face booster-card__back flex aspect-[.72] w-full items-center justify-center rounded-2xl border border-[#d6b975]/40 shadow-2xl" :aria-label="`Révéler la carte ${index + 1}`" @click="revealCard(index)">
+                <span class="font-display text-6xl text-[#e2bd72]/70">✦</span>
+              </button>
+              <div class="booster-card-face booster-card-front relative">
+                <span :class="['rarity-burst', rarityEffect(card.rarity)]"></span>
+                <UiCard :card="card" @click="selectedCard = card" />
               </div>
             </div>
           </div>
         </div>
         <div class="mt-10 flex items-center justify-between border-t border-white/10 pt-5">
-          <span class="text-xs uppercase tracking-[.18em] text-[#7f939d]">{{ revealedCards }} / {{ boosterCards.length }} cartes révélées</span>
-          <UiButton v-if="revealedCards === boosterCards.length" @click="closeBooster">Garder mes cartes</UiButton>
+          <span class="text-xs uppercase tracking-[.18em] text-[#7f939d]">{{ revealedCards.size }} / {{ boosterCards.length }} cartes révélées</span>
+          <UiButton v-if="revealedCards.size === boosterCards.length" @click="closeBooster">Garder mes cartes</UiButton>
         </div>
       </div>
     </div>
