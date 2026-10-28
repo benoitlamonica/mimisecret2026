@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, onBeforeUnmount, ref, useTemplateRef } from 'vue'
 import AppHeader from '@/components/AppHeader.vue'
 import BoosterOpeningOverlay from '@/components/BoosterOpeningOverlay.vue'
 import ClickGameModal from '@/components/ClickGameModal.vue'
@@ -32,7 +32,6 @@ const {
   selectAnswer,
   selectedAnswer,
   startQuiz,
-  points,
 } = useDailyQuiz()
 const { availableSpins, canSpin, spin } = useDailyWheel()
 const {
@@ -46,7 +45,7 @@ const {
   startGame: startClickGame,
 } = useClickGame()
 
-const boosterOverlay = ref<{ isOpening: { value: boolean }; open: () => void } | null>(null)
+const boosterOverlay = useTemplateRef<InstanceType<typeof BoosterOpeningOverlay>>('booster-overlay')
 const availableQuizzes = computed(() => Math.max(0, unlockedDays.value - completedDays.value.length))
 const canStartQuiz = computed(() => availableQuizzes.value > 0)
 const isWheelSpinning = ref(false)
@@ -66,12 +65,12 @@ onBeforeUnmount(() => {
 })
 
 function openFreeBooster(day: number) {
-  if (boosterOverlay.value?.isOpening.value) return
+  if (boosterOverlay.value?.isOpening) return
 
   const claimedDay = claimDay(day)
   if (!claimedDay) return
 
-  boosterOverlay.value?.open()
+  boosterOverlay.value?.open('standard', day)
 }
 
 function startNextQuiz() {
@@ -119,16 +118,6 @@ function recordClick() {
             <h1 class="font-display text-6xl leading-none text-[#fff9ed] md:text-8xl">Le calendrier</h1>
             <p class="mt-6 max-w-xl text-lg leading-relaxed text-[#b9c5cc]">Chaque jour débloque une nouvelle question. Une bonne réponse rapporte 10 points Mimi.</p>
           </div>
-          <div class="flex gap-4">
-            <div class="rounded-2xl border border-[#e2bd72]/30 bg-[#e2bd72]/10 px-6 py-4 text-right">
-              <p class="text-xs uppercase tracking-[.2em] text-[#aebdc2]">Mon solde</p>
-              <p class="mt-1 font-display text-4xl text-[#f2d58d]">{{ points }} <span class="text-base">pts</span></p>
-            </div>
-            <div class="rounded-2xl border border-[#8cb3bd]/30 bg-[#31576a]/20 px-6 py-4 text-right">
-              <p class="text-xs uppercase tracking-[.2em] text-[#aebdc2]">Quiz restants</p>
-              <p class="mt-1 font-display text-4xl text-[#d9e3e5]">{{ availableQuizzes }}</p>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -140,10 +129,6 @@ function recordClick() {
         <div class="rounded-2xl border border-white/10 bg-[#172536]/70 p-5 md:p-8">
           <div class="grid grid-cols-6 gap-2 sm:grid-cols-8 md:grid-cols-12 md:gap-3">
             <UiButton v-for="day in totalDays" :key="day" variant="ghost" :disabled="!isDayUnlocked(day) || isDayClaimed(day)" :class="[isDayClaimed(day) ? 'border-[#537382] bg-[#2b4654] text-[#c2d2d3]' : isDayUnlocked(day) ? 'border-[#d6b975]/60 bg-[#d6b975]/10 text-[#e2bd72] hover:bg-[#e2bd72] hover:text-[#172536]' : 'border-white/10 bg-white/3 text-[#71858e]', 'aspect-square rounded-lg border px-0 py-0 text-sm font-bold no-underline transition disabled:cursor-not-allowed md:rounded-xl']" @click="openFreeBooster(day)">{{ String(day).padStart(2, '0') }}</UiButton>
-          </div>
-          <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
-            <p class="text-sm text-[#8fa0aa]">{{ unlockedDays === 0 ? 'Le calendrier ouvre bientôt.' : `${availableQuizzes} quiz restant${availableQuizzes > 1 ? 's' : ''} à utiliser.` }}</p>
-            <UiButton variant="secondary" :disabled="!canStartQuiz" @click="startNextQuiz">Répondre au défi du jour</UiButton>
           </div>
         </div>
       </section>
@@ -210,7 +195,7 @@ function recordClick() {
         </div>
     </UiModal>
 
-    <BoosterOpeningOverlay ref="boosterOverlay" />
+    <BoosterOpeningOverlay ref="booster-overlay" />
 
     <UiModal v-if="wheelReward" v-model="isWheelRewardModalOpen" panel-class="max-w-sm" aria-label="Récompense de la roue">
       <div class="text-center">

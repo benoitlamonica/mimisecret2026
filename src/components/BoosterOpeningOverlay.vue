@@ -29,10 +29,10 @@ const {
   endPackDrag,
 } = useBoosterOpening()
 
-function open(kind: 'standard' | 'special') {
+function open(kind: 'standard' | 'special', day?: number) {
   currentKind.value = kind
   if (kind === 'special') openSpecialBooster()
-  else openBooster()
+  else openBooster(day)
 }
 
 function handlePackPointerDown(event: PointerEvent) {
@@ -65,7 +65,7 @@ defineExpose({ isOpening, open })
       <p class="mb-10 text-[#9cafb6]">{{ boosterPhase === 'pack' ? 'Découpe le paquet pour faire apparaître les cinq cartes.' : 'Clique sur chaque carte pour la retourner. La dernière cache toujours une rareté au minimum.' }}</p>
 
       <div v-if="boosterPhase === 'pack'" class="flex flex-col items-center justify-center py-8">
-        <button :class="{ 'is-cutting': isCutting, 'is-dragging': isDraggingPack }" :style="{ '--tear-progress': `${packDragProgress}px` }" class="booster-pack relative h-96 w-64 !rounded-none !p-0 no-underline" :disabled="isCutting" aria-label="Ouvrir le booster en le déchirant" @pointerdown="handlePackPointerDown" @pointermove="handlePackPointerMove" @pointerup="handlePackPointerUp" @pointercancel="handlePackPointerUp">
+        <button :class="{ 'is-cutting': isCutting, 'is-dragging': isDraggingPack }" :style="{ '--tear-progress': `${packDragProgress}px` }" class="booster-pack relative h-96 w-64 rounded-none! p-0! no-underline" :disabled="isCutting" aria-label="Ouvrir le booster en le déchirant" @pointerdown="handlePackPointerDown" @pointermove="handlePackPointerMove" @pointerup="handlePackPointerUp" @pointercancel="handlePackPointerUp">
           <div class="booster-pack__glow absolute -inset-12 rounded-full"></div>
           <div class="booster-pack__body card-shine relative flex h-full flex-col justify-between bg-[#203747] p-6 text-center shadow-[0_20px_70px_rgba(0,0,0,.45)]">
             <span class="booster-pack__crimp booster-pack__crimp--top"></span>
@@ -84,7 +84,7 @@ defineExpose({ isOpening, open })
       <div v-else class="booster-circle">
         <div v-for="(card, index) in boosterCards" :key="`${card.id}-${index}`" :style="{ '--card-index': index }" class="booster-circle-card">
           <div :class="{ 'is-revealed': isCardRevealed(index) }" class="booster-flip">
-            <button class="booster-card-face booster-card__back flex aspect-[.72] w-full items-center justify-center rounded-2xl border border-[#d6b975]/40 !p-0 no-underline shadow-2xl" :aria-label="`Révéler la carte ${index + 1}`" @click="revealCard(index)"><span class="font-display text-6xl text-[#e2bd72]/70">✦</span></button>
+            <button class="booster-card-face booster-card__back flex aspect-[.72] w-full items-center justify-center rounded-2xl border border-[#d6b975]/40 p-0! no-underline shadow-2xl" :aria-label="`Révéler la carte ${index + 1}`" @click="revealCard(index)"><span class="font-display text-6xl text-[#e2bd72]/70">✦</span></button>
             <div class="booster-card-face booster-card-front relative"><span :class="['rarity-burst', rarityEffect(card.rarity)]"></span><UiCard :card="card" @click="selectedCard = card" /></div>
           </div>
         </div>

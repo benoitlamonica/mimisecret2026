@@ -1,7 +1,7 @@
 import { onBeforeUnmount, ref } from 'vue'
 import { useLocalStorage } from '@/composables/useLocalStorage'
 import type { Card, Rarity } from '@/data/cards'
-import { drawBooster, drawSpecialBooster } from '@/config/booster'
+import { drawBooster, drawSpecialBooster, drawSpecialDayBooster, SPECIAL_DAYS } from '@/config/booster'
 
 export function useBoosterOpening() {
   const boosterCards = ref<Card[]>([])
@@ -28,8 +28,9 @@ export function useBoosterOpening() {
     isOpening.value = true
   }
 
-  function openBooster() {
-    openCards(drawBooster())
+  function openBooster(day?: number) {
+    const isSpecialDay = day && SPECIAL_DAYS.includes(day)
+    openCards(isSpecialDay ? drawSpecialDayBooster() : drawBooster())
   }
 
   function openSpecialBooster() {
