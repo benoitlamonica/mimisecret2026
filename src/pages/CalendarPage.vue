@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import AppHeader from '@/components/AppHeader.vue'
 import BoosterOpeningOverlay from '@/components/BoosterOpeningOverlay.vue'
 import UiButton from '@/components/UiButton.vue'
+import UiModal from '@/components/UiModal.vue'
 import { useAdventCalendar } from '@/composables/useAdventCalendar'
 import { useDailyQuiz } from '@/composables/useDailyQuiz'
 
@@ -94,8 +95,7 @@ function startNextQuiz() {
       </section>
     </main>
 
-    <div v-if="isQuizOpen" class="fixed inset-0 z-30 grid place-items-center bg-[#09111a]/90 p-5 backdrop-blur-md">
-      <div class="w-full max-w-xl rounded-2xl border border-[#e2bd72]/40 bg-[#172536] p-7 shadow-2xl md:p-10">
+    <UiModal v-model="isQuizOpen" panel-class="max-w-xl p-7 md:p-10" aria-label="Défi quotidien">
         <div class="mb-8 flex items-start justify-between gap-5">
           <div>
             <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Défi du jour · Question {{ quizIndex + 1 }} / {{ quizQuestions.length }}</p>
@@ -111,8 +111,7 @@ function startNextQuiz() {
         <div class="mt-8 flex justify-end">
           <UiButton :disabled="!selectedAnswer" @click="continueQuiz">{{ quizAnswerSubmitted && isLastQuestion ? `Terminer · +${pointsEarned} points` : quizAnswerSubmitted ? 'Question suivante' : 'Valider ma réponse' }} <span class="ml-2">→</span></UiButton>
         </div>
-      </div>
-    </div>
+    </UiModal>
 
     <BoosterOpeningOverlay ref="boosterOverlay" />
   </div>

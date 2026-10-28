@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import AppHeader from '@/components/AppHeader.vue'
-import UiButton from '@/components/UiButton.vue'
+import CardDetailModal from '@/components/CardDetailModal.vue'
 import UiCard from '@/components/UiCard.vue'
 import { useLocalStorage } from '@/composables/useLocalStorage'
 import { cards, type Card, type Rarity } from '@/data/cards'
@@ -71,13 +71,6 @@ const countByRarity = (rarity: Rarity) => collection.value.filter((card) => card
       </section>
     </main>
 
-    <div v-if="selectedCard" class="fixed inset-0 z-30 grid place-items-center bg-[#09111a]/80 p-6 backdrop-blur-sm" @click.self="selectedCard = null">
-      <div class="w-full max-w-md rounded-2xl border border-[#e2bd72]/40 bg-[#172536] p-7 shadow-2xl">
-        <div class="mb-8 flex items-start justify-between"><div><p class="text-xs uppercase tracking-[.2em] text-[#e2bd72]">{{ selectedCard.type }}</p><h2 class="mt-2 font-display text-4xl text-[#fff8e9]">{{ selectedCard.name }}</h2></div><button aria-label="Fermer" class="text-2xl text-[#9aabb1] hover:text-white" @click="selectedCard = null">×</button></div>
-        <div class="mb-6 flex items-center gap-5 rounded-xl border border-white/10 bg-[#203747] p-5"><span class="text-6xl text-[#e2c978]">{{ selectedCard.symbol }}</span><div><span class="rounded-full bg-[#fff0bc] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#95601d]">{{ selectedCard.rarity }}</span><p class="mt-3 text-xs uppercase tracking-widest text-[#8fa0aa]">{{ selectedCard.power }}</p></div></div>
-        <p class="leading-relaxed text-[#b9c5cc]">{{ selectedCard.description }}</p>
-        <UiButton class="mt-8 w-full" @click="selectedCard = null">Fermer la carte</UiButton>
-      </div>
-    </div>
+    <CardDetailModal v-if="selectedCard" v-model="selectedCard" :card="selectedCard" />
   </div>
 </template>

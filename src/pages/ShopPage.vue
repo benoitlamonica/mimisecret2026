@@ -2,8 +2,10 @@
 import { computed, ref } from 'vue'
 import AppHeader from '@/components/AppHeader.vue'
 import BoosterOpeningOverlay from '@/components/BoosterOpeningOverlay.vue'
+import PurchaseConfirmationModal from '@/components/PurchaseConfirmationModal.vue'
 import UiCard from '@/components/UiCard.vue'
 import UiButton from '@/components/UiButton.vue'
+import UiModal from '@/components/UiModal.vue'
 import {
   CLASSIC_BOOSTER_COST,
   EXTRAORDINARY_CARD_COST,
@@ -15,6 +17,26 @@ import { cards, type Card, type Rarity } from '@/data/cards'
 
 const boosterOverlay = ref<{ open: (kind: 'standard' | 'special') => void } | null>(null)
 const purchasedCard = ref<Card | null>(null)
+type PendingPurchase = {
+  type: 'booster' | 'card' | 'extraordinary'
+  name: string
+  cost: number
+  kind?: 'standard' | 'special'
+  card?: Card
+}
+const pendingPurchase = ref<PendingPurchase | null>(null)
+const isPurchaseModalOpen = computed({
+  get: () => pendingPurchase.value !== null,
+  set: (isOpen) => {
+    if (!isOpen) pendingPurchase.value = null
+  },
+})
+const isPurchasedCardModalOpen = computed({
+  get: () => purchasedCard.value !== null,
+  set: (isOpen) => {
+    if (!isOpen) purchasedCard.value = null
+  },
+})
 const searchTerm = ref('')
 const activeFilter = ref<'Toutes' | Rarity>('Toutes')
 const { points, spendPoints } = usePoints()
@@ -38,18 +60,50 @@ const showExtraordinaryCard = computed(() => {
 
 function buyBooster(kind: 'standard' | 'special') {
   const cost = kind === 'standard' ? CLASSIC_BOOSTER_COST : SPECIAL_BOOSTER_COST
-  if (!spendPoints(cost)) return
-
-  boosterOverlay.value?.open(kind)
+  pendingPurchase.value = {
+    type: 'booster',
+    name: kind === 'standard' ? 'Booster classique' : 'Booster spécial',
+    cost,
+    kind,
+  }
 }
 
 function buyCardFromShop(card: Card) {
-  if (buyCard(card)) purchasedCard.value = card
+  const cost = getCardCost(card.rarity)
+  if (cost === null) return
+
+  pendingPurchase.value = {
+    type: 'card',
+    name: card.name,
+    cost,
+    card,
+  }
 }
 
 function buyExtraordinaryCard() {
-  const card = buyRandomExtraordinaryCard()
-  if (card) purchasedCard.value = card
+  pendingPurchase.value = {
+    type: 'extraordinary',
+    name: 'Carte extraordinaire mystérieuse',
+    cost: EXTRAORDINARY_CARD_COST,
+  }
+}
+
+function confirmPurchase() {
+  const purchase = pendingPurchase.value
+  if (!purchase) return
+
+  pendingPurchase.value = null
+
+  if (purchase.type === 'booster' && purchase.kind && spendPoints(purchase.cost)) {
+    boosterOverlay.value?.open(purchase.kind)
+  }
+  if (purchase.type === 'card' && purchase.card && buyCard(purchase.card)) {
+    purchasedCard.value = purchase.card
+  }
+  if (purchase.type === 'extraordinary') {
+    const card = buyRandomExtraordinaryCard()
+    if (card) purchasedCard.value = card
+  }
 }
 </script>
 
@@ -131,12 +185,21 @@ function buyExtraordinaryCard() {
 
     <BoosterOpeningOverlay ref="boosterOverlay" />
 
-    <div v-if="purchasedCard" class="fixed inset-0 z-40 grid place-items-center bg-[#09111a]/80 p-6 backdrop-blur-sm" @click.self="purchasedCard = null">
-      <div class="w-full max-w-sm rounded-2xl border border-[#e2bd72]/40 bg-[#172536] p-7 shadow-2xl">
+    <PurchaseConfirmationModal v-if="pendingPurchase" v-model="isPurchaseModalOpen" :item-name="pendingPurchase.name" :cost="pendingPurchase.cost" :balance="points" @confirm="confirmPurchase">
+      <template #visual>
+        <div v-if="pendingPurchase.type === 'card' && pendingPurchase.card" class="pointer-events-none mx-auto max-w-45">
+          <UiCard :card="pendingPurchase.card" :rarity="pendingPurchase.card.rarity" />
+        </div>
+        <div v-else class="mx-auto grid h-28 w-24 place-items-center rounded-xl border border-[#e2bd72]/40 bg-[#203747] text-5xl text-[#e2bd72] shadow-lg">
+          {{ pendingPurchase.type === 'extraordinary' ? '?' : '✦' }}
+        </div>
+      </template>
+    </PurchaseConfirmationModal>
+
+    <UiModal v-if="purchasedCard" v-model="isPurchasedCardModalOpen" panel-class="max-w-sm" aria-label="Carte achetée">
         <p class="mb-5 text-center text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Carte ajoutée à ta collection</p>
         <UiCard :card="purchasedCard" :rarity="purchasedCard.rarity" />
         <UiButton class="mt-6 w-full" @click="purchasedCard = null">Garder la carte</UiButton>
-      </div>
-    </div>
+    </UiModal>
   </div>
 </template>

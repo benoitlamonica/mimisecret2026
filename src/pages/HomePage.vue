@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import AppHeader from '@/components/AppHeader.vue'
+import CardDetailModal from '@/components/CardDetailModal.vue'
 import UiButton from '@/components/UiButton.vue'
 import UiCard from '@/components/UiCard.vue'
 import { exempleCards, rarityDetails, type Card } from '@/data/cards'
@@ -71,12 +72,6 @@ const selectedCard = ref<Card | null>(null)
 
     <footer class="border-t border-white/10 px-6 py-8 text-center text-xs text-[#71858e]"><span class="font-display text-lg text-[#d9c48e]">Le Secret de Mimi</span><span class="mx-3 text-[#425661]">·</span>Une carte, chaque jour, jusqu’à Noël.</footer>
 
-    <div v-if="selectedCard" class="fixed inset-0 z-30 grid place-items-center bg-[#09111a]/80 p-6 backdrop-blur-sm" @click.self="selectedCard = null">
-      <div class="w-full max-w-md rounded-2xl border border-[#e2bd72]/40 bg-[#172536] p-7 shadow-2xl">
-        <div class="mb-8 flex items-start justify-between"><div><p class="text-xs uppercase tracking-[.2em] text-[#e2bd72]">{{ selectedCard.type }}</p><h2 class="mt-2 font-display text-4xl text-[#fff8e9]">{{ selectedCard.name }}</h2></div><button aria-label="Fermer" class="text-2xl text-[#9aabb1] hover:text-white" @click="selectedCard = null">×</button></div>
-        <p class="leading-relaxed text-[#b9c5cc]">{{ selectedCard.description }}</p>
-        <UiButton class="mt-8 w-full" @click="selectedCard = null">Fermer la carte</UiButton>
-      </div>
-    </div>
+    <CardDetailModal v-if="selectedCard" v-model="selectedCard" :card="selectedCard" />
   </div>
 </template>
