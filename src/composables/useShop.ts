@@ -2,9 +2,17 @@ import { cards, type Card, type Rarity } from '@/data/cards'
 import { useLocalStorage } from '@/composables/useLocalStorage'
 import { CARD_COST_BY_RARITY, EXTRAORDINARY_CARD_COST, usePoints } from '@/composables/usePoints'
 
+export const DUPLICATE_SALE_VALUE_BY_RARITY: Record<Rarity, number> = {
+  Commun: 2,
+  Rare: 10,
+  Épique: 25,
+  Légendaire: 100,
+  Extraordinaire: 500,
+}
+
 export function useShop() {
   const { value: collection } = useLocalStorage<Card[]>('mimi-secret-collection', [])
-  const { spendPoints } = usePoints()
+  const { addPoints, spendPoints } = usePoints()
 
   function getCardCost(rarity: Rarity) {
     if (rarity === 'Extraordinaire') return null
@@ -21,6 +29,44 @@ export function useShop() {
 
   function collectCard(card: Card) {
     collection.value = [...collection.value, card]
+  }
+
+  function getDuplicateSaleSummary() {
+    const seen = new Set<string>()
+    let count = 0
+    let value = 0
+
+    for (const card of collection.value) {
+      if (seen.has(card.id)) {
+        count += 1
+        value += DUPLICATE_SALE_VALUE_BY_RARITY[card.rarity]
+      } else {
+        seen.add(card.id)
+      }
+    }
+
+    return { count, value }
+  }
+
+  function sellDuplicates() {
+    const seen = new Set<string>()
+    const keptCards: Card[] = []
+    let value = 0
+
+    for (const card of collection.value) {
+      if (seen.has(card.id)) {
+        value += DUPLICATE_SALE_VALUE_BY_RARITY[card.rarity]
+      } else {
+        seen.add(card.id)
+        keptCards.push(card)
+      }
+    }
+
+    if (value === 0) return 0
+
+    collection.value = keptCards
+    addPoints(value)
+    return value
   }
 
   function buyRandomExtraordinaryCard() {
@@ -43,5 +89,8 @@ export function useShop() {
     buyRandomExtraordinaryCard,
     getOwnedCount: (card: Card) => collection.value.filter((ownedCard) => ownedCard.id === card.id).length,
     getCardCost,
+    collection,
+    getDuplicateSaleSummary,
+    sellDuplicates,
   }
 }

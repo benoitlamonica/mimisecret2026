@@ -102,7 +102,8 @@ onBeforeUnmount(() => window.removeEventListener('resize', resizeCanvas))
 
 <template>
   <div class="mx-auto w-full max-w-md">
-    <div class="relative overflow-hidden rounded-3xl border-4 p-5 shadow-2xl" :class="[accent, variant === 'card' ? 'mx-auto aspect-[.72] max-w-80' : 'aspect-[1.65] max-w-2xl']">
+    <div class="relative overflow-hidden rounded-3xl border-4 p-5 shadow-2xl"
+:class="[accent, variant === 'card' ? 'mx-auto aspect-[.72] max-w-80' : 'aspect-[1.65] max-w-2xl']">
       <div class="relative z-0 flex h-full flex-col items-center justify-center rounded-2xl border border-white/30 bg-[#172536] text-center">
         <template v-if="showHeading !== false">
           <p class="text-xs font-bold uppercase tracking-[.3em] text-[#e2bd72]">{{ subtitle }}</p>
@@ -110,7 +111,12 @@ onBeforeUnmount(() => window.removeEventListener('resize', resizeCanvas))
         </template>
         <slot />
       </div>
-      <canvas ref="canvas" class="absolute inset-5 z-10 h-[calc(100%-2.5rem)] w-[calc(100%-2.5rem)] cursor-crosshair touch-none rounded-2xl" @pointerdown="pointerDown" @pointermove="pointerMove" @pointerup="pointerUp" @pointercancel="pointerUp" />
+      <canvas ref="canvas"
+class="absolute inset-5 z-10 h-[calc(100%-2.5rem)] w-[calc(100%-2.5rem)] cursor-crosshair touch-none rounded-2xl"
+@pointerdown="pointerDown"
+@pointermove="pointerMove"
+@pointerup="pointerUp"
+@pointercancel="pointerUp" />
     </div>
     <p class="mt-4 text-center text-xs uppercase tracking-[.2em] text-[#8fa0aa]">{{ isRevealed ? 'Ticket révélé !' : 'Gratte avec ton doigt ou ta souris' }}</p>
   </div>

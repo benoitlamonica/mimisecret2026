@@ -20,4 +20,19 @@ export default defineConfigWithVueTs(
   vueTsConfigs.recommended,
 
   ...pluginOxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
+
+  {
+    name: 'app/vue-template-formatting',
+    files: ['**/*.vue'],
+    rules: {
+      'vue/max-attributes-per-line': ['error', {
+        multiline: {
+          max: 1,
+        },
+        singleline: {
+          max: 1,
+        },
+      }],
+    },
+  },
 )

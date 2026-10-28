@@ -53,19 +53,35 @@ defineExpose({ isOpening, open })
 </script>
 
 <template>
-  <UiModal v-model="isOpening" :dismissible="false" :show-close="false" panel-class="max-w-6xl !rounded-none !border-0 !bg-transparent !p-0 !shadow-none">
+  <UiModal v-model="isOpening"
+:dismissible="false"
+:show-close="false"
+panel-class="max-w-6xl !rounded-none !border-0 !bg-transparent !p-0 !shadow-none">
     <div class="mx-auto flex min-h-full max-w-6xl flex-col justify-center">
       <div class="mb-8 flex items-start justify-between">
         <div>
           <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">{{ currentKind === 'special' ? 'Booster spécial' : 'Booster classique' }}</p>
           <h2 class="mt-2 font-display text-5xl text-[#fff8e9] md:text-6xl">{{ boosterPhase === 'pack' ? 'Le paquet est arrivé' : 'Révèle tes cartes' }}</h2>
         </div>
-        <UiButton variant="ghost" aria-label="Fermer le booster" class="p-0 text-3xl no-underline transition hover:text-white" :disabled="boosterPhase === 'pack' || revealedCards.size < boosterCards.length" @click="closeBooster">×</UiButton>
+        <UiButton variant="ghost"
+aria-label="Fermer le booster"
+class="p-0 text-3xl no-underline transition hover:text-white"
+:disabled="boosterPhase === 'pack' || revealedCards.size < boosterCards.length"
+@click="closeBooster">×</UiButton>
       </div>
       <p class="mb-10 text-[#9cafb6]">{{ boosterPhase === 'pack' ? 'Découpe le paquet pour faire apparaître les cinq cartes.' : 'Clique sur chaque carte pour la retourner. La dernière cache toujours une rareté au minimum.' }}</p>
 
-      <div v-if="boosterPhase === 'pack'" class="flex flex-col items-center justify-center py-8">
-        <button :class="{ 'is-cutting': isCutting, 'is-dragging': isDraggingPack }" :style="{ '--tear-progress': `${packDragProgress}px` }" class="booster-pack relative h-96 w-64 rounded-none! p-0! no-underline" :disabled="isCutting" aria-label="Ouvrir le booster en le déchirant" @pointerdown="handlePackPointerDown" @pointermove="handlePackPointerMove" @pointerup="handlePackPointerUp" @pointercancel="handlePackPointerUp">
+      <div v-if="boosterPhase === 'pack'"
+class="flex flex-col items-center justify-center py-8">
+        <button :class="{ 'is-cutting': isCutting, 'is-dragging': isDraggingPack }"
+:style="{ '--tear-progress': `${packDragProgress}px` }"
+class="booster-pack relative h-96 w-64 rounded-none! p-0! no-underline"
+:disabled="isCutting"
+aria-label="Ouvrir le booster en le déchirant"
+@pointerdown="handlePackPointerDown"
+@pointermove="handlePackPointerMove"
+@pointerup="handlePackPointerUp"
+@pointercancel="handlePackPointerUp">
           <div class="booster-pack__glow absolute -inset-12 rounded-full"></div>
           <div class="booster-pack__body card-shine relative flex h-full flex-col justify-between bg-[#203747] p-6 text-center shadow-[0_20px_70px_rgba(0,0,0,.45)]">
             <span class="booster-pack__crimp booster-pack__crimp--top"></span>
@@ -78,23 +94,36 @@ defineExpose({ isOpening, open })
           <span class="booster-pack__scissors absolute -right-10 top-1/2 text-4xl text-[#f4d994]">✂</span>
         </button>
         <p class="mt-8 text-xs uppercase tracking-[.2em] text-[#8499a1]">{{ isCutting ? 'Le paquet s’ouvre…' : 'Fais glisser pour déchirer le paquet' }}</p>
-        <button :disabled="isCutting" class="mt-5 px-8 py-4" @click="cutBooster">{{ isCutting ? 'Le paquet s’ouvre…' : 'Découper le booster' }} <span class="ml-2">✂</span></button>
+        <button :disabled="isCutting"
+class="mt-5 px-8 py-4"
+@click="cutBooster">{{ isCutting ? 'Le paquet s’ouvre…' : 'Découper le booster' }} <span class="ml-2">✂</span></button>
       </div>
 
-      <div v-else class="booster-circle">
-        <div v-for="(card, index) in boosterCards" :key="`${card.id}-${index}`" :style="{ '--card-index': index }" class="booster-circle-card">
-          <div :class="{ 'is-revealed': isCardRevealed(index) }" class="booster-flip">
-            <button class="booster-card-face booster-card__back flex aspect-[.72] w-full items-center justify-center rounded-2xl border border-[#d6b975]/40 p-0! no-underline shadow-2xl" :aria-label="`Révéler la carte ${index + 1}`" @click="revealCard(index)"><span class="font-display text-6xl text-[#e2bd72]/70">✦</span></button>
-            <div class="booster-card-face booster-card-front relative"><span :class="['rarity-burst', rarityEffect(card.rarity)]"></span><UiCard :card="card" @click="selectedCard = card" /></div>
+      <div v-else
+class="booster-circle">
+        <div v-for="(card, index) in boosterCards"
+:key="`${card.id}-${index}`"
+:style="{ '--card-index': index }"
+class="booster-circle-card">
+          <div :class="{ 'is-revealed': isCardRevealed(index) }"
+class="booster-flip">
+            <button class="booster-card-face booster-card__back flex aspect-[.72] w-full items-center justify-center rounded-2xl border border-[#d6b975]/40 p-0! no-underline shadow-2xl"
+:aria-label="`Révéler la carte ${index + 1}`"
+@click="revealCard(index)"><span class="font-display text-6xl text-[#e2bd72]/70">✦</span></button>
+            <div class="booster-card-face booster-card-front relative"><span :class="['rarity-burst', rarityEffect(card.rarity)]"></span><UiCard :card="card"
+@click="selectedCard = card" /></div>
           </div>
         </div>
       </div>
       <div class="mt-10 flex items-center justify-between border-t border-white/10 pt-5">
         <span class="text-xs uppercase tracking-[.18em] text-[#7f939d]">{{ revealedCards.size }} / {{ boosterCards.length }} cartes révélées</span>
-        <UiButton v-if="revealedCards.size === boosterCards.length" @click="closeBooster">Garder mes cartes</UiButton>
+        <UiButton v-if="revealedCards.size === boosterCards.length"
+@click="closeBooster">Garder mes cartes</UiButton>
       </div>
     </div>
   </UiModal>
 
-  <CardDetailModal v-if="selectedCard" v-model="selectedCard" :card="selectedCard" />
+  <CardDetailModal v-if="selectedCard"
+v-model="selectedCard"
+:card="selectedCard" />
 </template>
