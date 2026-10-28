@@ -15,9 +15,11 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <UiModal v-model="isOpen"
-panel-class="max-w-md"
-aria-label="Confirmation d’achat">
+  <UiModal
+    v-model="isOpen"
+    panel-class="max-w-md"
+    aria-label="Confirmation d’achat"
+  >
     <div class="pr-8">
       <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Confirmer l’achat</p>
       <h2 class="mt-2 font-display text-4xl text-[#fff8e9]">{{ itemName }}</h2>
@@ -34,12 +36,20 @@ aria-label="Confirmation d’achat">
     </div>
     <slot name="visual" />
     <div class="mt-8 flex gap-3">
-      <UiButton variant="ghost"
-class="flex-1"
-@click="isOpen = false">Annuler</UiButton>
-      <UiButton class="flex-1"
-:disabled="balance < cost"
-@click="emit('confirm')">Confirmer</UiButton>
+      <UiButton
+        variant="ghost"
+        class="flex-1"
+        @click="isOpen = false"
+      >
+        Annuler
+      </UiButton>
+      <UiButton
+        class="flex-1"
+        :disabled="balance < cost"
+        @click="emit('confirm')"
+      >
+        Confirmer
+      </UiButton>
     </div>
   </UiModal>
 </template>

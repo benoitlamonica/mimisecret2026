@@ -47,16 +47,22 @@ const style = () => rarityStyles[props.card.rarity]
 </script>
 
 <template>
-  <button :disabled="disabled"
-:aria-disabled="disabled"
-:class="{ 'ui-card--rare': card.rarity === 'Rare', 'ui-card--epic': card.rarity === 'Épique', 'ui-card--legendary': card.rarity === 'Légendaire', 'ui-card--extraordinary': card.rarity === 'Extraordinaire' }"
-class="ui-card group w-full text-left disabled:cursor-not-allowed"
-:aria-label="mystery ? 'Carte extraordinaire mystérieuse' : `Voir la carte ${card.name}`">
-    <div :class="[style().glow, `bg-linear-to-br ${style().frame}`, { 'opacity-35 grayscale': disabled && !mystery, 'group-hover:-translate-y-2': !disabled }]"
-class="rounded-2xl p-1 transition duration-300">
+  <button
+    :disabled="disabled"
+    :aria-disabled="disabled"
+    :class="{ 'ui-card--rare': card.rarity === 'Rare', 'ui-card--epic': card.rarity === 'Épique', 'ui-card--legendary': card.rarity === 'Légendaire', 'ui-card--extraordinary': card.rarity === 'Extraordinaire' }"
+    class="ui-card group w-full text-left disabled:cursor-not-allowed"
+    :aria-label="mystery ? 'Carte extraordinaire mystérieuse' : `Voir la carte ${card.name}`"
+  >
+    <div
+      :class="[style().glow, `bg-linear-to-br ${style().frame}`, { 'opacity-35 grayscale': disabled && !mystery, 'group-hover:-translate-y-2': !disabled }]"
+      class="rounded-2xl p-1 transition duration-300"
+    >
       <div class="ui-card__surface card-shine aspect-[.72] rounded-[.8rem] border border-black/20 bg-[#172536]">
-        <div v-if="mystery"
-class="ui-card__mystery grid h-full place-items-center text-center">
+        <div
+          v-if="mystery"
+          class="ui-card__mystery grid h-full place-items-center text-center"
+        >
           <div><span class="ui-card__mystery-mark">?</span><p class="mt-3 text-[10px] uppercase tracking-[.2em] text-[#e2bd72]">Carte secrète</p></div>
         </div>
         <template v-else>
@@ -65,15 +71,23 @@ class="ui-card__mystery grid h-full place-items-center text-center">
             <span>{{ card.symbol }}</span>
           </div>
           <div class="grid h-[58%] place-items-center">
-            <span :class="style().symbol"
-class="ui-card__symbol drop-shadow-[0_0_20px_currentColor]">{{ card.symbol }}</span>
+            <span
+              :class="style().symbol"
+              class="ui-card__symbol drop-shadow-[0_0_20px_currentColor]"
+            >{{ card.symbol }}</span>
           </div>
           <div class="border-t border-white/15 pt-3">
-            <p :title="card.name"
-class="ui-card__name font-display text-[#fff8e9]">{{ card.name }}</p>
+            <p
+              :title="card.name"
+              class="ui-card__name font-display text-[#fff8e9]"
+            >
+              {{ card.name }}
+            </p>
             <p class="ui-card__description mt-1 line-clamp-2 text-[#9cafb6]">{{ card.description }}</p>
-            <span :class="style().badge"
-class="ui-card__badge mt-2 inline-block rounded-full px-2.5 py-1 font-bold uppercase tracking-wider">{{ card.rarity }}</span>
+            <span
+              :class="style().badge"
+              class="ui-card__badge mt-2 inline-block rounded-full px-2.5 py-1 font-bold uppercase tracking-wider"
+            >{{ card.rarity }}</span>
           </div>
         </template>
       </div>

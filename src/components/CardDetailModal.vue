@@ -45,21 +45,31 @@ const isOpen = computed({
 </script>
 
 <template>
-  <UiModal v-model="isOpen"
-panel-class="!my-0 !h-[calc(100dvh-2.5rem)] !max-w-none !rounded-none !border-0 !bg-transparent !p-0 !shadow-none"
-aria-label="Carte en grand format">
-    <div ref="cardStage"
-class="card-detail-stage flex h-full w-full items-center justify-center"
-@pointermove="updateTilt"
-@pointerleave="resetTilt"
-@pointerup="resetTilt">
-      <div class="card-detail-tilt relative w-[min(82vw,28rem)]"
-:style="{ transform: `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)` }">
-        <UiCard :card="card"
-:rarity="card.rarity"
-class="relative z-0 w-full" />
-        <div class="card-detail-glare absolute inset-0 z-10 rounded-2xl"
-:style="{ '--glare-x': `${glareX}%`, '--glare-y': `${glareY}%` }"></div>
+  <UiModal
+    v-model="isOpen"
+    panel-class="!my-0 !h-[calc(100dvh-2.5rem)] !max-w-none !rounded-none !border-0 !bg-transparent !p-0 !shadow-none"
+    aria-label="Carte en grand format"
+  >
+    <div
+      ref="cardStage"
+      class="card-detail-stage flex h-full w-full items-center justify-center"
+      @pointermove="updateTilt"
+      @pointerleave="resetTilt"
+      @pointerup="resetTilt"
+    >
+      <div
+        class="card-detail-tilt relative w-[min(82vw,28rem)]"
+        :style="{ transform: `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)` }"
+      >
+        <UiCard
+          :card="card"
+          :rarity="card.rarity"
+          class="relative z-0 w-full"
+        />
+        <div
+          class="card-detail-glare absolute inset-0 z-10 rounded-2xl"
+          :style="{ '--glare-x': `${glareX}%`, '--glare-y': `${glareY}%` }"
+        ></div>
       </div>
     </div>
   </UiModal>

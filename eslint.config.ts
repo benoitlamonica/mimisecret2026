@@ -25,6 +25,7 @@ export default defineConfigWithVueTs(
     name: 'app/vue-template-formatting',
     files: ['**/*.vue'],
     rules: {
+      'no-trailing-spaces': 'error',
       'vue/max-attributes-per-line': ['error', {
         multiline: {
           max: 1,
@@ -32,6 +33,27 @@ export default defineConfigWithVueTs(
         singleline: {
           max: 1,
         },
+      }],
+      'vue/first-attribute-linebreak': ['error', {
+        multiline: 'below',
+        singleline: 'ignore',
+      }],
+      'vue/html-closing-bracket-newline': ['error', {
+        multiline: 'always',
+        selfClosingTag: {
+          multiline: 'always',
+          singleline: 'never',
+        },
+        singleline: 'never',
+      }],
+      'vue/multiline-html-element-content-newline': ['error', {
+        ignoreWhenEmpty: true,
+      }],
+      'vue/html-indent': ['error', 2, {
+        alignAttributesVertically: false,
+        attribute: 1,
+        baseIndent: 1,
+        closeBracket: 0,
       }],
     },
   },

@@ -128,12 +128,16 @@ function recordClick() {
         </div>
         <div class="rounded-2xl border border-white/10 bg-[#172536]/70 p-5 md:p-8">
           <div class="grid grid-cols-6 gap-2 sm:grid-cols-8 md:grid-cols-12 md:gap-3">
-            <UiButton v-for="day in totalDays"
-:key="day"
-variant="ghost"
-:disabled="!isDayUnlocked(day) || isDayClaimed(day)"
-:class="[isDayClaimed(day) ? 'border-[#537382] bg-[#2b4654] text-[#c2d2d3]' : isDayUnlocked(day) ? 'border-[#d6b975]/60 bg-[#d6b975]/10 text-[#e2bd72] hover:bg-[#e2bd72] hover:text-[#172536]' : 'border-white/10 bg-white/3 text-[#71858e]', 'aspect-square rounded-lg border px-0 py-0 text-sm font-bold no-underline transition disabled:cursor-not-allowed md:rounded-xl']"
-@click="openFreeBooster(day)">{{ String(day).padStart(2, '0') }}</UiButton>
+            <UiButton
+              v-for="day in totalDays"
+              :key="day"
+              variant="ghost"
+              :disabled="!isDayUnlocked(day) || isDayClaimed(day)"
+              :class="[isDayClaimed(day) ? 'border-[#537382] bg-[#2b4654] text-[#c2d2d3]' : isDayUnlocked(day) ? 'border-[#d6b975]/60 bg-[#d6b975]/10 text-[#e2bd72] hover:bg-[#e2bd72] hover:text-[#172536]' : 'border-white/10 bg-white/3 text-[#71858e]', 'aspect-square rounded-lg border px-0 py-0 text-sm font-bold no-underline transition disabled:cursor-not-allowed md:rounded-xl']"
+              @click="openFreeBooster(day)"
+            >
+              {{ String(day).padStart(2, '0') }}
+            </UiButton>
           </div>
         </div>
       </section>
@@ -150,99 +154,137 @@ variant="ghost"
             <h3 class="mt-2 font-display text-3xl text-[#fff8e9]">Le défi de Mimi</h3>
             <p class="mt-3 text-sm text-[#9cafb6]">Trois questions pour gagner des points.</p>
             <p class="mt-5 font-bold text-[#f2d58d]">{{ availableQuizzes }} partie{{ availableQuizzes > 1 ? 's' : '' }} restante{{ availableQuizzes > 1 ? 's' : '' }}</p>
-            <UiButton variant="secondary"
-class="mt-5 w-full"
-:disabled="!canStartQuiz"
-@click="startNextQuiz">Jouer au quiz</UiButton>
+            <UiButton
+              variant="secondary"
+              class="mt-5 w-full"
+              :disabled="!canStartQuiz"
+              @click="startNextQuiz"
+            >
+              Jouer au quiz
+            </UiButton>
           </article>
           <article class="rounded-2xl border border-[#8cb3bd]/30 bg-[#172536] p-6">
             <p class="text-xs font-bold uppercase tracking-[.2em] text-[#8cb3bd]">Réflexes</p>
             <h3 class="mt-2 font-display text-3xl text-[#fff8e9]">Clique Mimi !</h3>
             <p class="mt-3 text-sm text-[#9cafb6]">Clique le plus de fois possible en 10 secondes.</p>
             <p class="mt-5 font-bold text-[#b8e4ed]">{{ availableClickGames }} partie{{ availableClickGames > 1 ? 's' : '' }} restante{{ availableClickGames > 1 ? 's' : '' }}</p>
-            <UiButton variant="secondary"
-class="mt-5 w-full"
-:disabled="availableClickGames === 0"
-@click="startClickGame">Jouer au clic</UiButton>
+            <UiButton
+              variant="secondary"
+              class="mt-5 w-full"
+              :disabled="availableClickGames === 0"
+              @click="startClickGame"
+            >
+              Jouer au clic
+            </UiButton>
           </article>
           <article class="rounded-2xl border border-[#d99bc5]/30 bg-[#172536] p-6">
             <p class="text-xs font-bold uppercase tracking-[.2em] text-[#d99bc5]">Chance</p>
             <h3 class="mt-2 font-display text-3xl text-[#fff8e9]">La roue de Mimi</h3>
             <p class="mt-3 text-sm text-[#9cafb6]">Un lancement pour tenter de gagner des points.</p>
             <p class="mt-5 font-bold text-[#f0b9dc]">{{ availableSpins }} partie{{ availableSpins > 1 ? 's' : '' }} restante{{ availableSpins > 1 ? 's' : '' }}</p>
-            <UiButton variant="secondary"
-class="mt-5 w-full"
-:disabled="availableSpins === 0"
-@click="isWheelOpen = true">Ouvrir la roue</UiButton>
+            <UiButton
+              variant="secondary"
+              class="mt-5 w-full"
+              :disabled="availableSpins === 0"
+              @click="isWheelOpen = true"
+            >
+              Ouvrir la roue
+            </UiButton>
           </article>
         </div>
       </section>
     </main>
 
-    <ClickGameModal v-model="isClickGameOpen"
-:clicks="clicks"
-:is-playing="isClickGamePlaying"
-:remaining-seconds="remainingSeconds"
-@click="recordClick"
-@close="closeClickGame" />
+    <ClickGameModal
+      v-model="isClickGameOpen"
+      :clicks="clicks"
+      :is-playing="isClickGamePlaying"
+      :remaining-seconds="remainingSeconds"
+      @click="recordClick"
+      @close="closeClickGame"
+    />
 
-    <UiModal v-model="isWheelOpen"
-:dismissible="!isWheelSpinning"
-panel-class="max-w-4xl p-6 md:p-10"
-aria-label="Roue de Mimi">
+    <UiModal
+      v-model="isWheelOpen"
+      :dismissible="!isWheelSpinning"
+      panel-class="max-w-4xl p-6 md:p-10"
+      aria-label="Roue de Mimi"
+    >
       <div class="mb-8 text-center">
         <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Une chance par jour</p>
         <h2 class="mt-2 font-display text-5xl text-[#fff8e9]">La roue de Mimi</h2>
         <p class="mx-auto mt-4 max-w-xl leading-relaxed text-[#9cafb6]">Lance la roue pour gagner uniquement des points Mimi. Le jackpot de 100 points est unique et très rare.</p>
         <p class="mt-4 text-sm font-bold text-[#e2bd72]">{{ availableSpins }} lancement{{ availableSpins > 1 ? 's' : '' }} disponible{{ availableSpins > 1 ? 's' : '' }}</p>
       </div>
-      <PointWheel class="mx-auto"
-:disabled="!canSpin"
-:spinning="isWheelSpinning"
-:rotation="wheelRotation"
-@spin="spinWheel" />
+      <PointWheel
+        class="mx-auto"
+        :disabled="!canSpin"
+        :spinning="isWheelSpinning"
+        :rotation="wheelRotation"
+        @spin="spinWheel"
+      />
     </UiModal>
 
-    <UiModal v-model="isQuizOpen"
-panel-class="max-w-xl p-7 md:p-10"
-aria-label="Défi quotidien">
-        <div class="mb-8 flex items-start justify-between gap-5">
-          <div>
-            <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Défi du jour · Question {{ quizIndex + 1 }} / {{ quizQuestions.length }}</p>
-            <h2 class="mt-2 font-display text-4xl text-[#fff8e9]">Gagne des points Mimi</h2>
-          </div>
-          <span class="rounded-full bg-[#e2bd72]/10 px-3 py-1 text-[10px] uppercase tracking-wider text-[#e2bd72]">{{ currentQuestion?.difficulty }}</span>
+    <UiModal
+      v-model="isQuizOpen"
+      panel-class="max-w-xl p-7 md:p-10"
+      aria-label="Défi quotidien"
+    >
+      <div class="mb-8 flex items-start justify-between gap-5">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Défi du jour · Question {{ quizIndex + 1 }} / {{ quizQuestions.length }}</p>
+          <h2 class="mt-2 font-display text-4xl text-[#fff8e9]">Gagne des points Mimi</h2>
         </div>
-        <p class="mb-7 text-xl leading-relaxed text-[#f7f3ea]">{{ currentQuestion?.name }}</p>
-        <div class="grid gap-3">
-          <UiButton v-for="option in currentQuestion?.options"
-:key="option"
-variant="ghost"
-:disabled="quizAnswerSubmitted"
-:class="[selectedAnswer === option ? 'border-[#e2bd72] bg-[#e2bd72]/15 text-[#fff8e9]' : 'border-white/10 bg-white/3 text-[#b9c5cc]', 'w-full justify-start rounded-xl border px-4 py-3 text-left no-underline transition hover:border-[#e2bd72] disabled:cursor-not-allowed']"
-@click="selectAnswer(option)">{{ option }}</UiButton>
-        </div>
-        <p v-if="quizAnswerSubmitted"
-class="mt-5 text-sm"
-:class="selectedAnswer === currentQuestion?.answer ? 'text-emerald-300' : 'text-rose-300'">{{ selectedAnswer === currentQuestion?.answer ? 'Bonne réponse ! +10 points' : `La bonne réponse était : ${currentQuestion?.answer}` }}</p>
-        <div class="mt-8 flex justify-end">
-          <UiButton :disabled="!selectedAnswer"
-@click="continueQuiz">{{ quizAnswerSubmitted && isLastQuestion ? `Terminer · +${pointsEarned} points` : quizAnswerSubmitted ? 'Question suivante' : 'Valider ma réponse' }} <span class="ml-2">→</span></UiButton>
-        </div>
+        <span class="rounded-full bg-[#e2bd72]/10 px-3 py-1 text-[10px] uppercase tracking-wider text-[#e2bd72]">{{ currentQuestion?.difficulty }}</span>
+      </div>
+      <p class="mb-7 text-xl leading-relaxed text-[#f7f3ea]">{{ currentQuestion?.name }}</p>
+      <div class="grid gap-3">
+        <UiButton
+          v-for="option in currentQuestion?.options"
+          :key="option"
+          variant="ghost"
+          :disabled="quizAnswerSubmitted"
+          :class="[selectedAnswer === option ? 'border-[#e2bd72] bg-[#e2bd72]/15 text-[#fff8e9]' : 'border-white/10 bg-white/3 text-[#b9c5cc]', 'w-full justify-start rounded-xl border px-4 py-3 text-left no-underline transition hover:border-[#e2bd72] disabled:cursor-not-allowed']"
+          @click="selectAnswer(option)"
+        >
+          {{ option }}
+        </UiButton>
+      </div>
+      <p
+        v-if="quizAnswerSubmitted"
+        class="mt-5 text-sm"
+        :class="selectedAnswer === currentQuestion?.answer ? 'text-emerald-300' : 'text-rose-300'"
+      >
+        {{ selectedAnswer === currentQuestion?.answer ? 'Bonne réponse ! +10 points' : `La bonne réponse était : ${currentQuestion?.answer}` }}
+      </p>
+      <div class="mt-8 flex justify-end">
+        <UiButton
+          :disabled="!selectedAnswer"
+          @click="continueQuiz"
+        >
+          {{ quizAnswerSubmitted && isLastQuestion ? `Terminer · +${pointsEarned} points` : quizAnswerSubmitted ? 'Question suivante' : 'Valider ma réponse' }} <span class="ml-2">→</span>
+        </UiButton>
+      </div>
     </UiModal>
 
     <BoosterOpeningOverlay ref="booster-overlay" />
 
-    <UiModal v-if="wheelReward"
-v-model="isWheelRewardModalOpen"
-panel-class="max-w-sm"
-aria-label="Récompense de la roue">
+    <UiModal
+      v-if="wheelReward"
+      v-model="isWheelRewardModalOpen"
+      panel-class="max-w-sm"
+      aria-label="Récompense de la roue"
+    >
       <div class="text-center">
         <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Récompense obtenue</p>
         <h2 class="mt-3 font-display text-6xl text-[#f2d58d]">+{{ wheelReward.points }}</h2>
         <p class="mt-2 text-sm uppercase tracking-[.2em] text-[#aebdc2]">points Mimi · {{ wheelReward.label }}</p>
-        <UiButton class="mt-8 w-full"
-@click="wheelReward = null">Continuer</UiButton>
+        <UiButton
+          class="mt-8 w-full"
+          @click="wheelReward = null"
+        >
+          Continuer
+        </UiButton>
       </div>
     </UiModal>
   </div>

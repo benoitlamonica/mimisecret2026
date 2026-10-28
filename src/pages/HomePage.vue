@@ -23,10 +23,18 @@ const selectedCard = ref<Card | null>(null)
             <h1 class="max-w-xl font-display text-6xl leading-[.9] text-[#fff9ed] md:text-8xl">Chaque jour,<br><em class="font-normal text-[#e2bd72]">une magie.</em></h1>
             <p class="mt-8 max-w-lg text-lg leading-relaxed text-[#b9c5cc]">Le Secret de Mimi est une aventure de cartes, de questions et de découvertes. Réponds aux défis du calendrier, gagne des points et choisis tes prochains boosters.</p>
             <div class="mt-10 flex flex-wrap gap-4">
-              <UiButton href="/calendar"
-class="px-7 py-4">Découvrir le calendrier <span class="ml-2">→</span></UiButton>
-              <UiButton href="/shop"
-variant="ghost">Visiter la boutique</UiButton>
+              <UiButton
+                href="/calendar"
+                class="px-7 py-4"
+              >
+                Découvrir le calendrier <span class="ml-2">→</span>
+              </UiButton>
+              <UiButton
+                href="/shop"
+                variant="ghost"
+              >
+                Visiter la boutique
+              </UiButton>
             </div>
             <div class="mt-12 flex items-center gap-8 border-t border-white/10 pt-6 text-sm text-[#8fa0aa]">
               <span><strong class="mr-1 text-xl font-normal text-[#f1e8d2]">3</strong> questions par jour</span>
@@ -56,10 +64,12 @@ variant="ghost">Visiter la boutique</UiButton>
         <div class="mx-auto max-w-7xl">
           <div class="mb-12 max-w-xl"><p class="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">À collectionner</p><h2 class="font-display text-5xl text-[#fff8e9]">Chaque carte a son éclat.</h2><p class="mt-5 leading-relaxed text-[#94a8b0]">Des trouvailles délicates aux trésors les plus convoités, cinq niveaux de rareté rendent chaque ouverture unique.</p></div>
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <div v-for="(rarity, index) in rarityDetails"
-:key="rarity.name"
-:class="`rarity-${rarity.color}`"
-class="rounded-2xl border border-white/10 bg-[#1b2c3b] p-6 transition hover:-translate-y-1">
+            <div
+              v-for="(rarity, index) in rarityDetails"
+              :key="rarity.name"
+              :class="`rarity-${rarity.color}`"
+              class="rounded-2xl border border-white/10 bg-[#1b2c3b] p-6 transition hover:-translate-y-1"
+            >
               <div class="mb-12 flex items-center justify-between"><span class="font-display text-4xl">{{ rarity.name === 'Extraordinaire' ? '✹' : rarity.name === 'Légendaire' ? '★' : rarity.name === 'Épique' ? '✧' : rarity.name === 'Rare' ? '◆' : '✦' }}</span><span class="text-[10px] uppercase tracking-[.2em] text-[#84969e]">{{ String(index + 1).padStart(2, '0') }} / {{ rarityDetails.length }}</span></div>
               <h3 class="font-display text-2xl text-[#f8f2e5]">{{ rarity.name }}</h3><p class="mt-2 text-sm leading-relaxed text-[#8fa0aa]">{{ rarity.description }}</p>
             </div>
@@ -70,19 +80,23 @@ class="rounded-2xl border border-white/10 bg-[#1b2c3b] p-6 transition hover:-tra
       <section class="mx-auto max-w-7xl px-6 py-24 lg:px-10">
         <div class="mb-12 flex items-end justify-between"><div><p class="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Un avant-goût</p><h2 class="font-display text-5xl text-[#fff8e9]">Les premières merveilles</h2></div><span class="hidden text-sm text-[#778b95] md:block">Collection 01</span></div>
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <UiCard v-for="card in exempleCards"
-:key="card.id"
-:card="card"
-:rarity="card.rarity"
-@click="selectedCard = card" />
+          <UiCard
+            v-for="card in exempleCards"
+            :key="card.id"
+            :card="card"
+            :rarity="card.rarity"
+            @click="selectedCard = card"
+          />
         </div>
       </section>
     </main>
 
     <footer class="border-t border-white/10 px-6 py-8 text-center text-xs text-[#71858e]"><span class="font-display text-lg text-[#d9c48e]">Le Secret de Mimi</span><span class="mx-3 text-[#425661]">·</span>Une carte, chaque jour, jusqu’à Noël.</footer>
 
-    <CardDetailModal v-if="selectedCard"
-v-model="selectedCard"
-:card="selectedCard" />
+    <CardDetailModal
+      v-if="selectedCard"
+      v-model="selectedCard"
+      :card="selectedCard"
+    />
   </div>
 </template>

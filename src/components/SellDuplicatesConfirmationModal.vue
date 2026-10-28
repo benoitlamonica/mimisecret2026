@@ -13,9 +13,11 @@ const emit = defineEmits<{ confirm: [] }>()
 </script>
 
 <template>
-  <UiModal v-model="isOpen"
-panel-class="max-w-md"
-aria-label="Confirmation de vente des doublons">
+  <UiModal
+    v-model="isOpen"
+    panel-class="max-w-md"
+    aria-label="Confirmation de vente des doublons"
+  >
     <div class="pr-8">
       <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Confirmer la vente</p>
       <h2 class="mt-2 font-display text-4xl text-[#fff8e9]">Vendre mes doublons</h2>
@@ -32,11 +34,19 @@ aria-label="Confirmation de vente des doublons">
       </div>
     </div>
     <div class="flex gap-3">
-      <UiButton variant="ghost"
-class="flex-1"
-@click="isOpen = false">Annuler</UiButton>
-      <UiButton class="flex-1"
-@click="emit('confirm')">Vendre</UiButton>
+      <UiButton
+        variant="ghost"
+        class="flex-1"
+        @click="isOpen = false"
+      >
+        Annuler
+      </UiButton>
+      <UiButton
+        class="flex-1"
+        @click="emit('confirm')"
+      >
+        Vendre
+      </UiButton>
     </div>
   </UiModal>
 </template>
