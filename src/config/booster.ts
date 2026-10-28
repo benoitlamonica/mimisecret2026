@@ -14,13 +14,13 @@ const STANDARD_RARITIES: RarityTable = [
 const GUARANTEED_RARITIES: RarityTable = [
   { rarity: 'Extraordinaire', threshold: 1 },
   { rarity: 'Légendaire', threshold: 11 },
-  { rarity: 'Épique', threshold: 46 },
+  { rarity: 'Épique', threshold: 36 },
   { rarity: 'Rare', threshold: 100 },
 ]
 
 const SPECIAL_RARITIES: RarityTable = [
-  { rarity: 'Extraordinaire', threshold: 10 },
-  { rarity: 'Légendaire', threshold: 33 },
+  { rarity: 'Extraordinaire', threshold: 3 },
+  { rarity: 'Légendaire', threshold: 22 },
   { rarity: 'Épique', threshold: 50 },
   { rarity: 'Rare', threshold: 100 },
 ]

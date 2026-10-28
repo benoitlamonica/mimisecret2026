@@ -1,9 +1,17 @@
 import { computed } from 'vue'
 import { useLocalStorage } from '@/composables/useLocalStorage'
+import type { Rarity } from '@/data/cards'
 
-export const MIMI_POINTS_PER_CORRECT_ANSWER = 10
+export const MIMI_POINTS_PER_CORRECT_ANSWER = 20
 export const CLASSIC_BOOSTER_COST = 30
 export const SPECIAL_BOOSTER_COST = 100
+export const EXTRAORDINARY_CARD_COST = 200
+export const CARD_COST_BY_RARITY: Record<Exclude<Rarity, 'Extraordinaire'>, number> = {
+  Commun: 5,
+  Rare: 10,
+  Épique: 20,
+  Légendaire: 50,
+}
 const { value: points } = useLocalStorage<number>('mimi-points', 0)
 
 export function usePoints() {
