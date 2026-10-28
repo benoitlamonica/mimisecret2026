@@ -1,4 +1,5 @@
 import { computed } from 'vue'
+import { useAdventCalendar } from '@/composables/useAdventCalendar'
 import { useLocalStorage } from '@/composables/useLocalStorage'
 import { usePoints } from '@/composables/usePoints'
 
@@ -25,18 +26,23 @@ export const wheelSegments = Array.from({ length: maxDisplayCount }, (_, round) 
 export const wheelSegmentCount = wheelSegments.length
 
 interface WheelProgress {
-  lastSpinDate: string | null
-}
-
-function todayKey() {
-  const today = new Date()
-  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+  spunDays?: number[]
+  lastSpinDate?: string | null
 }
 
 export function useDailyWheel() {
   const { value: progress } = useLocalStorage<WheelProgress>('mimi-wheel-progress', { lastSpinDate: null })
+  const { unlockedDays } = useAdventCalendar()
   const { addPoints } = usePoints()
-  const canSpin = computed(() => true) // computed(() => progress.value.lastSpinDate !== todayKey())
+  const spunDays = computed(() => {
+    if (Array.isArray(progress.value.spunDays)) {
+      return [...new Set(progress.value.spunDays.filter((day) => day >= 1 && day <= unlockedDays.value))]
+    }
+
+    return progress.value.lastSpinDate && unlockedDays.value > 0 ? [1] : []
+  })
+  const availableSpins = computed(() => Math.max(0, unlockedDays.value - spunDays.value.length))
+  const canSpin = computed(() => availableSpins.value > 0)
 
   function spin() {
     if (!canSpin.value) return null
@@ -49,12 +55,19 @@ export function useDailyWheel() {
 
     if (!reward) throw new Error('Impossible de sélectionner une récompense de roue.')
 
-    progress.value = { lastSpinDate: todayKey() }
+    const day = Array.from({ length: unlockedDays.value }, (_, index) => index + 1)
+      .find((candidate) => !spunDays.value.includes(candidate))
+    if (!day) return null
+
+    progress.value = {
+      spunDays: [...spunDays.value, day],
+    }
     addPoints(reward.points)
     return reward
   }
 
   return {
+    availableSpins,
     canSpin,
     spin,
   }

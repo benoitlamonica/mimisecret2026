@@ -19,6 +19,10 @@ export function useShop() {
     return true
   }
 
+  function collectCard(card: Card) {
+    collection.value = [...collection.value, card]
+  }
+
   function buyRandomExtraordinaryCard() {
     const extraordinaryCards = cards.filter((card) => card.rarity === 'Extraordinaire')
     if (extraordinaryCards.length === 0) {
@@ -35,6 +39,7 @@ export function useShop() {
 
   return {
     buyCard,
+    collectCard,
     buyRandomExtraordinaryCard,
     getOwnedCount: (card: Card) => collection.value.filter((ownedCard) => ownedCard.id === card.id).length,
     getCardCost,

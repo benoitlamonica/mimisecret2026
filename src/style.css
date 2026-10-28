@@ -429,3 +429,33 @@ button { font: inherit; }
 .point-wheel--spinning {
   transition-duration: 3.2s;
 }
+
+@keyframes scratch-reward-shine {
+  0% { opacity: .35; transform: scale(.92); filter: brightness(1); }
+  55% { opacity: 1; transform: scale(1.04); filter: brightness(1.8); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+}
+
+.scratch-reward--commun,
+.scratch-reward--common,
+.scratch-reward--epic,
+.scratch-reward--rare,
+.scratch-reward--épique,
+.scratch-reward--légendaire,
+.scratch-reward--extraordinaire,
+.scratch-reward--legendary {
+  animation: scratch-reward-shine .8s ease-out both;
+}
+
+.scratch-reward--rare,
+.scratch-reward--epic,
+.scratch-reward--légendaire,
+.scratch-reward--extraordinaire,
+.scratch-reward--legendary {
+  filter: drop-shadow(0 0 18px rgba(226, 189, 114, .45));
+}
+
+.scratch-reward--extraordinaire {
+  animation-duration: 1.4s;
+  filter: drop-shadow(0 0 28px rgba(255, 143, 179, .8));
+}

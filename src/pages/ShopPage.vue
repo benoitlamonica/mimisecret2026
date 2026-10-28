@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import AppHeader from '@/components/AppHeader.vue'
 import BoosterOpeningOverlay from '@/components/BoosterOpeningOverlay.vue'
 import PurchaseConfirmationModal from '@/components/PurchaseConfirmationModal.vue'
+import ScratchTicketModal from '@/components/ScratchTicketModal.vue'
 import UiCard from '@/components/UiCard.vue'
 import UiButton from '@/components/UiButton.vue'
 import UiModal from '@/components/UiModal.vue'
@@ -13,16 +14,23 @@ import {
   usePoints,
 } from '@/composables/usePoints'
 import { useShop } from '@/composables/useShop'
+import {
+  drawScratchReward,
+  SCRATCH_TICKET_COST,
+  type ScratchReward,
+  type ScratchTicketType,
+} from '@/composables/useScratchTickets'
 import { cards, type Card, type Rarity } from '@/data/cards'
 
 const boosterOverlay = ref<{ open: (kind: 'standard' | 'special') => void } | null>(null)
 const purchasedCard = ref<Card | null>(null)
 type PendingPurchase = {
-  type: 'booster' | 'card' | 'extraordinary'
+  type: 'booster' | 'card' | 'extraordinary' | 'ticket'
   name: string
   cost: number
   kind?: 'standard' | 'special'
   card?: Card
+  ticketType?: ScratchTicketType
 }
 const pendingPurchase = ref<PendingPurchase | null>(null)
 const isPurchaseModalOpen = computed({
@@ -39,8 +47,12 @@ const isPurchasedCardModalOpen = computed({
 })
 const searchTerm = ref('')
 const activeFilter = ref<'Toutes' | Rarity>('Toutes')
-const { points, spendPoints } = usePoints()
-const { buyCard, buyRandomExtraordinaryCard, getCardCost, getOwnedCount } = useShop()
+const { addPoints, points, spendPoints } = usePoints()
+const { buyCard, buyRandomExtraordinaryCard, collectCard, getCardCost, getOwnedCount } = useShop()
+const scratchTicketType = ref<ScratchTicketType>('banco')
+const scratchReward = ref<ScratchReward | null>(null)
+const isScratchModalOpen = ref(false)
+const isScratchRewardApplied = ref(false)
 const filters: Array<'Toutes' | Rarity> = ['Toutes', 'Commun', 'Rare', 'Épique', 'Légendaire', 'Extraordinaire']
 const purchasableCards = computed(() => {
   const search = searchTerm.value.trim().toLocaleLowerCase()
@@ -88,6 +100,15 @@ function buyExtraordinaryCard() {
   }
 }
 
+function buyScratchTicket(ticketType: ScratchTicketType) {
+  pendingPurchase.value = {
+    type: 'ticket',
+    name: ticketType === 'banco' ? 'Ticket Banco Mimi' : 'Ticket Carto Mimi',
+    cost: SCRATCH_TICKET_COST,
+    ticketType,
+  }
+}
+
 function confirmPurchase() {
   const purchase = pendingPurchase.value
   if (!purchase) return
@@ -104,6 +125,20 @@ function confirmPurchase() {
     const card = buyRandomExtraordinaryCard()
     if (card) purchasedCard.value = card
   }
+  if (purchase.type === 'ticket' && purchase.ticketType && spendPoints(purchase.cost)) {
+    scratchTicketType.value = purchase.ticketType
+    scratchReward.value = drawScratchReward(purchase.ticketType)
+    isScratchRewardApplied.value = false
+    isScratchModalOpen.value = true
+  }
+}
+
+function completeScratch() {
+  if (isScratchRewardApplied.value || !scratchReward.value) return
+  isScratchRewardApplied.value = true
+
+  if (scratchReward.value.kind === 'points') addPoints(scratchReward.value.points)
+  else collectCard(scratchReward.value.card)
 }
 </script>
 
@@ -150,6 +185,28 @@ function confirmPurchase() {
 
       <section class="pb-12">
         <div class="mb-8">
+          <p class="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Les tickets de Mimi</p>
+          <h2 class="font-display text-5xl text-[#fff8e9]">Tente ta chance</h2>
+          <p class="mt-4 max-w-xl leading-relaxed text-[#9cafb6]">Gratte tes tickets pour gagner des points ou une nouvelle carte. Chaque ticket coûte {{ SCRATCH_TICKET_COST }} points.</p>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2">
+          <article class="relative overflow-hidden rounded-2xl border border-[#e2bd72]/40 bg-linear-to-br from-[#4c3525] to-[#172536] p-8">
+            <p class="text-xs font-bold uppercase tracking-[.25em] text-[#f2d58d]">Ticket points</p>
+            <h3 class="mt-3 font-display text-4xl text-[#fff8e9]">Banco Mimi</h3>
+            <p class="mt-3 leading-relaxed text-[#c5bca8]">De rien à 200 points, avec un jackpot très rare.</p>
+            <div class="mt-8 flex items-center justify-between gap-4"><span class="font-display text-3xl text-[#f2d58d]">{{ SCRATCH_TICKET_COST }} pts</span><UiButton :disabled="points < SCRATCH_TICKET_COST" @click="buyScratchTicket('banco')">Acheter</UiButton></div>
+          </article>
+          <article class="relative overflow-hidden rounded-2xl border border-[#8cb3bd]/40 bg-linear-to-br from-[#244454] to-[#172536] p-8">
+            <p class="text-xs font-bold uppercase tracking-[.25em] text-[#b8e4ed]">Ticket cartes</p>
+            <h3 class="mt-3 font-display text-4xl text-[#fff8e9]">Carto Mimi</h3>
+            <p class="mt-3 leading-relaxed text-[#b9d1d6]">Une carte aléatoire, de Commune à Extraordinaire.</p>
+            <div class="mt-8 flex items-center justify-between gap-4"><span class="font-display text-3xl text-[#b8e4ed]">{{ SCRATCH_TICKET_COST }} pts</span><UiButton :disabled="points < SCRATCH_TICKET_COST" @click="buyScratchTicket('carto')">Acheter</UiButton></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="pb-12">
+        <div class="mb-8">
           <p class="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">À l’unité</p>
           <h2 class="font-display text-5xl text-[#fff8e9]">Choisis ta carte</h2>
           <p class="mt-4 max-w-xl leading-relaxed text-[#9cafb6]">Achète directement les cartes Commun, Rare, Épique et Légendaire. Les cartes Extraordinaires restent secrètes jusqu’à leur achat ou leur découverte dans un booster.</p>
@@ -157,7 +214,7 @@ function confirmPurchase() {
         <div class="mb-6 flex flex-col gap-3 md:flex-row">
           <input v-model="searchTerm" type="search" placeholder="Rechercher une carte…" aria-label="Rechercher une carte" class="min-w-0 flex-1 rounded-xl border border-white/10 bg-[#172536] px-4 py-3 text-sm text-[#f7f3ea] outline-none placeholder:text-[#71858e] focus:border-[#e2bd72]">
           <div class="flex gap-2 overflow-x-auto pb-1">
-            <button v-for="filter in filters" :key="filter" :class="activeFilter === filter ? 'border-[#e2bd72] bg-[#e2bd72] text-[#172536]' : 'border-white/10 bg-white/3 text-[#94a8b0]'" class="shrink-0 rounded-full border px-3 py-2 text-xs font-bold transition hover:border-[#e2bd72]" @click="activeFilter = filter">{{ filter }}</button>
+              <button v-for="filter in filters" :key="filter" variant="ghost" :class="[activeFilter === filter ? 'border-[#e2bd72] bg-[#e2bd72] text-[#172536]' : 'border-white/10 bg-white/3 text-[#94a8b0]', 'shrink-0 rounded-full border px-3 py-2 text-xs font-bold no-underline transition hover:border-[#e2bd72]']" @click="activeFilter = filter">{{ filter }}</button>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
@@ -191,10 +248,12 @@ function confirmPurchase() {
           <UiCard :card="pendingPurchase.card" :rarity="pendingPurchase.card.rarity" />
         </div>
         <div v-else class="mx-auto grid h-28 w-24 place-items-center rounded-xl border border-[#e2bd72]/40 bg-[#203747] text-5xl text-[#e2bd72] shadow-lg">
-          {{ pendingPurchase.type === 'extraordinary' ? '?' : '✦' }}
+          {{ pendingPurchase.type === 'extraordinary' ? '?' : pendingPurchase.type === 'ticket' ? '✧' : '✦' }}
         </div>
       </template>
     </PurchaseConfirmationModal>
+
+    <ScratchTicketModal v-model="isScratchModalOpen" :ticket-type="scratchTicketType" :reward="scratchReward" @complete="completeScratch" />
 
     <UiModal v-if="purchasedCard" v-model="isPurchasedCardModalOpen" panel-class="max-w-sm" aria-label="Carte achetée">
         <p class="mb-5 text-center text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Carte ajoutée à ta collection</p>
