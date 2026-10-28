@@ -3,7 +3,7 @@ import { cards } from '@/data/cards'
 
 export type RarityTable = Array<{ rarity: Rarity; threshold: number }>
 
-export const SPECIAL_DAYS = [24]
+export const SPECIAL_DAYS = [1, 12, 24]
 
 const STANDARD_RARITIES: RarityTable = [
   { rarity: 'Extraordinaire', threshold: 0.1 },
@@ -34,8 +34,9 @@ const SPECIAL_BOOSTER_GUARANTEED_RARITIES: RarityTable = [
 ]
 
 const SPECIAL_DAY_BOOSTER: RarityTable = [
-  { rarity: 'Extraordinaire', threshold: 20 },
-  { rarity: 'Légendaire', threshold: 100 },
+  { rarity: 'Extraordinaire', threshold: 10 },
+  { rarity: 'Légendaire', threshold: 80 },
+  { rarity: 'Épique', threshold: 100 },
 ]
 
 const SPECIAL_DAY_GUARANTEED_EXTRAORDINARY: RarityTable = [

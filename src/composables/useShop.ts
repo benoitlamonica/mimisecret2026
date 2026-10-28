@@ -5,12 +5,12 @@ import { CARD_COST_BY_RARITY, EXTRAORDINARY_CARD_COST, usePoints } from '@/compo
 import { notifyStellarUnlock } from '@/composables/useStellarUnlock'
 
 export const DUPLICATE_SALE_VALUE_BY_RARITY: Record<Rarity, number> = {
-  Commun: 2,
-  Rare: 10,
-  Épique: 25,
-  Légendaire: 100,
-  Extraordinaire: 500,
-  Stellaire: 500,
+  Commun: 1,
+  Rare: 5,
+  Épique: 20,
+  Légendaire: 50,
+  Extraordinaire: 100,
+  Stellaire: 5000,
 }
 
 export function useShop() {

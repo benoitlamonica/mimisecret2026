@@ -23,22 +23,23 @@ const selectedCard = ref<Card | null>(null)
             <h1 class="max-w-xl font-display text-6xl leading-[.9] text-[#fff9ed] md:text-8xl">Chaque jour,<br><em class="font-normal text-[#e2bd72]">une magie.</em></h1>
             <p class="mt-8 max-w-lg text-lg leading-relaxed text-[#b9c5cc]">Le Secret de Mimi est une aventure de cartes, de questions et de découvertes. Réponds aux défis du calendrier, gagne des points et choisis tes prochains boosters.</p>
             <div class="mt-10 flex flex-wrap gap-4">
-              <UiButton
-                href="/calendar"
-                class="px-7 py-4"
-              >
-                Découvrir le calendrier <span class="ml-2">→</span>
-              </UiButton>
-              <UiButton
-                href="/shop"
-                variant="ghost"
-              >
-                Visiter la boutique
-              </UiButton>
+              <RouterLink to="/calendar">
+                <UiButton>
+                  Découvrir le calendrier <span class="ml-2">→</span>
+                </UiButton>
+              </RouterLink>
+
+              <RouterLink to="/shop">
+                <UiButton
+                  variant="ghost"
+                >
+                  Visiter la boutique
+                </UiButton>
+              </RouterLink>
             </div>
             <div class="mt-12 flex items-center gap-8 border-t border-white/10 pt-6 text-sm text-[#8fa0aa]">
               <span><strong class="mr-1 text-xl font-normal text-[#f1e8d2]">3</strong> questions par jour</span>
-              <span><strong class="mr-1 text-xl font-normal text-[#f1e8d2]">10</strong> points par bonne réponse</span>
+              <span><strong class="mr-1 text-xl font-normal text-[#f1e8d2]">20</strong> points par bonne réponse</span>
             </div>
           </div>
 
@@ -56,6 +57,91 @@ const selectedCard = ref<Card | null>(null)
                 <div class="flex items-end justify-between border-t border-[#e4c67d]/20 pt-4 text-left"><span class="text-[9px] uppercase tracking-widest text-[#aebdc2]">Cartes à collectionner</span><span class="font-display text-2xl text-[#e4c67d]">✦</span></div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="relative overflow-hidden bg-[#101a26] px-6 py-24 lg:px-10">
+        <div class="absolute -left-32 top-20 h-80 w-80 rounded-full bg-[#31576a]/20 blur-3xl"></div>
+        <div class="relative mx-auto max-w-7xl">
+          <div class="mb-14 max-w-2xl">
+            <p class="mb-3 text-xs font-bold uppercase tracking-[.3em] text-[#e2bd72]">Le rituel de Mimi</p>
+            <h2 class="font-display text-5xl text-[#fff8e9] md:text-6xl">Comment jouer, exactement.</h2>
+            <p class="mt-5 text-lg leading-relaxed text-[#9cafb6]">Chaque journée ouvre une nouvelle page de l’histoire. Voici le chemin complet, du premier booster jusqu’au secret le mieux gardé de la collection.</p>
+          </div>
+
+          <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            <article class="rounded-2xl border border-[#e2bd72]/30 bg-[#172536] p-6">
+              <span class="font-display text-4xl text-[#e2bd72]">01</span>
+              <h3 class="mt-8 font-display text-3xl text-[#fff8e9]">Ouvre le calendrier</h3>
+              <p class="mt-3 text-sm leading-relaxed text-[#9cafb6]">Chaque jour disponible te donne <strong class="text-[#f2d58d]">un booster gratuit</strong>. Ouvre la case du jour pour recevoir plusieurs cartes et enrichir ta collection. Si tu prends du retard, les boosters des jours débloqués restent disponibles et s’accumulent.</p>
+            </article>
+            <article class="rounded-2xl border border-[#8cb3bd]/30 bg-[#172536] p-6">
+              <span class="font-display text-4xl text-[#8cb3bd]">02</span>
+              <h3 class="mt-8 font-display text-3xl text-[#fff8e9]">Joue aux mini-jeux</h3>
+              <p class="mt-3 text-sm leading-relaxed text-[#9cafb6]">Chaque jour débloqué ajoute une partie au quiz, au clic et à la roue. Les parties non jouées s’accumulent : réponds à 3 questions, clique pendant 10 secondes ou tente ta chance à la roue pour gagner des points.</p>
+            </article>
+            <article class="rounded-2xl border border-[#d99bc5]/30 bg-[#172536] p-6">
+              <span class="font-display text-4xl text-[#d99bc5]">03</span>
+              <h3 class="mt-8 font-display text-3xl text-[#fff8e9]">Dépense tes points</h3>
+              <p class="mt-3 text-sm leading-relaxed text-[#9cafb6]">Dans la boutique, achète un booster classique à 30 points ou spécial à 100 points. Tu peux aussi choisir une carte : Commune 5, Rare 15, Épique 50 et Légendaire 200 points. Les tickets à gratter coûtent 10 points : Banco Mimi peut rapporter jusqu’à 200 points, Carto Mimi une carte de Commune à Extraordinaire.</p>
+            </article>
+            <article class="rounded-2xl border border-[#f2d58d]/40 bg-[#172536] p-6">
+              <span class="font-display text-4xl text-[#f2d58d]">04</span>
+              <h3 class="mt-8 font-display text-3xl text-[#fff8e9]">Complète le secret</h3>
+              <p class="mt-3 text-sm leading-relaxed text-[#9cafb6]">Une fois chaque carte Commune, Rare, Épique, Légendaire et Extraordinaire réunie, la carte <strong class="text-[#dce9ff]">Stellaire</strong> se débloque automatiquement. Elle n’est vendue nulle part et ne peut pas être tirée au hasard.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-[#152331] px-6 py-24 lg:px-10">
+        <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[.8fr_1.2fr] lg:items-start">
+          <div>
+            <p class="mb-3 text-xs font-bold uppercase tracking-[.3em] text-[#e2bd72]">Les règles de la magie</p>
+            <h2 class="font-display text-5xl text-[#fff8e9]">Les points sont la clé.</h2>
+            <p class="mt-5 leading-relaxed text-[#9cafb6]">Chaque point gagné rapproche la collection de son dernier éclat. Les mini-jeux sont gratuits et se renouvellent avec les jours du calendrier.</p>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-3">
+            <article class="rounded-2xl border border-white/10 bg-[#172536] p-5">
+              <p class="text-xs font-bold uppercase tracking-[.2em] text-[#e2bd72]">Quiz</p>
+              <p class="mt-3 font-display text-3xl text-[#fff8e9]">20 pts</p>
+              <p class="mt-2 text-sm leading-relaxed text-[#8fa0aa]">Par bonne réponse, sur 3 questions par partie.</p>
+            </article>
+            <article class="rounded-2xl border border-white/10 bg-[#172536] p-5">
+              <p class="text-xs font-bold uppercase tracking-[.2em] text-[#8cb3bd]">Clique Mimi</p>
+              <p class="mt-3 font-display text-3xl text-[#fff8e9]">1 clic</p>
+              <p class="mt-2 text-sm leading-relaxed text-[#8fa0aa]">Chaque clic ou tap rapporte 1 point pendant 10 secondes.</p>
+            </article>
+            <article class="rounded-2xl border border-white/10 bg-[#172536] p-5">
+              <p class="text-xs font-bold uppercase tracking-[.2em] text-[#d99bc5]">Roue</p>
+              <p class="mt-3 font-display text-3xl text-[#fff8e9]">0 à 100</p>
+              <p class="mt-2 text-sm leading-relaxed text-[#8fa0aa]">Un gain aléatoire : 0, 10, 20, 30, 50 ou 100 points.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="relative overflow-hidden bg-[#101a26] px-6 py-24 lg:px-10">
+        <div class="absolute right-0 top-0 h-96 w-96 rounded-full bg-[#d6b975]/8 blur-3xl"></div>
+        <div class="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.1fr_.9fr] lg:items-center">
+          <div>
+            <p class="mb-3 text-xs font-bold uppercase tracking-[.3em] text-[#e2bd72]">La légende</p>
+            <h2 class="font-display text-5xl text-[#fff8e9]">Mimi n’a pas tout raconté.</h2>
+            <div class="mt-6 space-y-4 leading-relaxed text-[#9cafb6]">
+              <p>On raconte qu’au cœur de l’hiver, Mimi a enfermé ses souvenirs les plus précieux dans une collection de cartes. Chaque booster est un fragment de cette histoire, chaque question une énigme laissée sur le chemin.</p>
+              <p>Les cartes Extraordinaires sont cachées dans les ouvertures les plus chanceuses. Mais une dernière carte ne répond à aucune boutique, aucun ticket et aucun hasard.</p>
+              <p class="text-[#d9c48e]">La Stellaire n’apparaît que lorsque tu as rassemblé toute la lumière. Complète la collection, et elle viendra enfin révéler le secret de Mimi.</p>
+            </div>
+          </div>
+          <div class="rounded-3xl border border-[#e2bd72]/25 bg-linear-to-br from-[#1b2c3b] to-[#101a26] p-8 shadow-[0_20px_80px_rgba(0,0,0,.25)]">
+            <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">À retenir</p>
+            <ul class="mt-6 space-y-5 text-sm leading-relaxed text-[#b9c5cc]">
+              <li class="flex gap-3"><span class="text-[#e2bd72]">✦</span><span>Un booster gratuit pour chaque jour débloqué.</span></li>
+              <li class="flex gap-3"><span class="text-[#e2bd72]">✦</span><span>Une partie de chaque mini-jeu par jour débloqué.</span></li>
+              <li class="flex gap-3"><span class="text-[#e2bd72]">✦</span><span>Les points servent à acheter boosters, cartes et tickets.</span></li>
+              <li class="flex gap-3"><span class="text-[#e2bd72]">✦</span><span>La Stellaire est la récompense ultime de la collection complète.</span></li>
+            </ul>
           </div>
         </div>
       </section>

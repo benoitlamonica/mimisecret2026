@@ -5,12 +5,12 @@ import type { Rarity } from '@/data/cards'
 export const MIMI_POINTS_PER_CORRECT_ANSWER = 20
 export const CLASSIC_BOOSTER_COST = 30
 export const SPECIAL_BOOSTER_COST = 100
-export const EXTRAORDINARY_CARD_COST = 1000
+export const EXTRAORDINARY_CARD_COST = 500
 export const CARD_COST_BY_RARITY: Record<Exclude<Rarity, 'Extraordinaire' | 'Stellaire'>, number> = {
   Commun: 5,
   Rare: 15,
   Épique: 50,
-  Légendaire: 200,
+  Légendaire: 100,
 }
 const { value: points } = useLocalStorage<number>('mimi-points', 0)
 
