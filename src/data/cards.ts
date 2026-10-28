@@ -128,7 +128,6 @@ export const epicCards: CardDefinition[] = [
 ]
 
 export const legendaryCards: CardDefinition[] = [
-  { name: 'Boubou', type: 'Trésor du cœur', description: 'Un nom qui porte une histoire, une présence et une chaleur que l’on garde près de soi.', power: 'Lien éternel' },
   { name: 'Rocket', type: 'Compagnon de Noël', description: 'Le petit gardien à quatre pattes qui rend chaque fête plus vivante.', power: 'Ronronnement magique' },
   { name: 'Papa Noël', type: 'Figure légendaire', description: 'Le visiteur de la nuit qui fait voyager les rêves jusque sous le sapin.', power: 'Tournée enchantée' },
   { name: 'Le réveillon de Noël', type: 'Nuit sacrée', description: 'La grande soirée où les cœurs se rapprochent autour d’une table pleine de vie.', power: 'Minuit enchanté' },
@@ -142,7 +141,8 @@ export const legendaryCards: CardDefinition[] = [
 export const extraordinaryCards: CardDefinition[] = [
   { name: 'L’étoile Mathilde', type: 'Lumière du souvenir', description: 'Une étoile douce qui veille dans le ciel et garde avec tendresse la mémoire de Mathilde.', power: 'Amour qui demeure' },
   { name: 'Dany', type: 'Maman exceptionnelle', description: 'La présence chaleureuse et aimante qui rend chaque moment spécial.', power: 'Amour infini' },
-  { name: 'Florent', type: 'Papa attentionné', description: 'La présence rassurante et bienveillante qui rend chaque instant précieux.', power: 'Amour constant' }
+  { name: 'Florent', type: 'Papa attentionné', description: 'La présence rassurante et bienveillante qui rend chaque instant précieux.', power: 'Amour constant' },
+  { name: 'Boubou', type: 'Trésor du cœur', description: 'Un nom qui porte une histoire, une présence et une chaleur que l’on garde près de soi.', power: 'Lien éternel' },
 ]
 
 function addCardData(

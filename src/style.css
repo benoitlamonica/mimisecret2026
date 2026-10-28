@@ -430,6 +430,24 @@ button { font: inherit; }
   transition-duration: 3.2s;
 }
 
+.card-detail-stage {
+  perspective: 1200px;
+  touch-action: none;
+}
+
+.card-detail-tilt {
+  transform-style: preserve-3d;
+  transition: transform .18s ease-out;
+  will-change: transform;
+}
+
+.card-detail-glare {
+  background: radial-gradient(circle at var(--glare-x) var(--glare-y), rgba(255,255,255,.5), transparent 32%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  transform: translateZ(30px);
+}
+
 @keyframes scratch-reward-shine {
   0% { opacity: .35; transform: scale(.92); filter: brightness(1); }
   55% { opacity: 1; transform: scale(1.04); filter: brightness(1.8); }

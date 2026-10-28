@@ -18,7 +18,6 @@ const navLinks = [
   { path: '/calendar', label: 'Calendrier', icon: '▦' },
   { path: '/shop', label: 'Boutique', icon: '◇' },
   { path: '/collection', label: 'Collection', icon: '▤' },
-  { path: '/', label: 'Accueil', icon: '⌂' },
 ]
 
 function isActive(path: string) {
