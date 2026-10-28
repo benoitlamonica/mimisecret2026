@@ -4,9 +4,12 @@ import UiCard from '@/components/UiCard.vue'
 import UiModal from '@/components/UiModal.vue'
 import type { Card } from '@/data/cards'
 
-defineProps<{
+withDefaults(defineProps<{
   card: Card
-}>()
+  message?: string
+}>(), {
+  message: undefined,
+})
 const selectedCard = defineModel<Card | null>({ required: true })
 const cardStage = ref<HTMLElement | null>(null)
 const rotateX = ref(0)
@@ -52,7 +55,7 @@ const isOpen = computed({
   >
     <div
       ref="cardStage"
-      class="card-detail-stage flex h-full w-full items-center justify-center"
+      class="card-detail-stage flex h-full w-full flex-col items-center justify-center"
       @pointermove="updateTilt"
       @pointerleave="resetTilt"
       @pointerup="resetTilt"
@@ -71,6 +74,12 @@ const isOpen = computed({
           :style="{ '--glare-x': `${glareX}%`, '--glare-y': `${glareY}%` }"
         ></div>
       </div>
+      <p
+        v-if="message"
+        class="mt-8 text-center font-display text-3xl text-[#fff8e9] md:text-4xl"
+      >
+        {{ message }}
+      </p>
     </div>
   </UiModal>
 </template>

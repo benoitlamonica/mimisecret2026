@@ -1,6 +1,6 @@
 import type { ReplaceSpaces } from "@/utils/types"
 
-export type Rarity = 'Commun' | 'Rare' | 'Épique' | 'Légendaire' | 'Extraordinaire'
+export type Rarity = 'Commun' | 'Rare' | 'Épique' | 'Légendaire' | 'Extraordinaire' | 'Stellaire'
 
 export type CardID<Name extends string> = Lowercase<ReplaceSpaces<Name>>
 
@@ -129,6 +129,9 @@ export const epicCards: CardDefinition[] = [
 
 export const legendaryCards: CardDefinition[] = [
   { name: 'Rocket', type: 'Compagnon de Noël', description: 'Le petit gardien à quatre pattes qui rend chaque fête plus vivante.', power: 'Ronronnement magique' },
+  { name: 'Dany', type: 'Maman exceptionnelle', description: 'La présence chaleureuse et aimante qui rend chaque moment spécial.', power: 'Amour infini' },
+  { name: 'Florent', type: 'Papa attentionné', description: 'La présence rassurante et bienveillante qui rend chaque instant précieux.', power: 'Amour constant' },
+  { name: 'Boubou', type: 'Trésor du cœur', description: 'Un nom qui porte une histoire, une présence et une chaleur que l’on garde près de soi.', power: 'Lien éternel' },
   { name: 'Papa Noël', type: 'Figure légendaire', description: 'Le visiteur de la nuit qui fait voyager les rêves jusque sous le sapin.', power: 'Tournée enchantée' },
   { name: 'Le réveillon de Noël', type: 'Nuit sacrée', description: 'La grande soirée où les cœurs se rapprochent autour d’une table pleine de vie.', power: 'Minuit enchanté' },
   { name: 'La magie de Noël', type: 'Essence des fêtes', description: 'Cette sensation rare qui transforme les petits instants en souvenirs inoubliables.', power: 'Merveille absolue' },
@@ -139,10 +142,14 @@ export const legendaryCards: CardDefinition[] = [
 ]
 
 export const extraordinaryCards: CardDefinition[] = [
-  { name: 'L’étoile Mathilde', type: 'Lumière du souvenir', description: 'Une étoile douce qui veille dans le ciel et garde avec tendresse la mémoire de Mathilde.', power: 'Amour qui demeure' },
-  { name: 'Dany', type: 'Maman exceptionnelle', description: 'La présence chaleureuse et aimante qui rend chaque moment spécial.', power: 'Amour infini' },
-  { name: 'Florent', type: 'Papa attentionné', description: 'La présence rassurante et bienveillante qui rend chaque instant précieux.', power: 'Amour constant' },
-  { name: 'Boubou', type: 'Trésor du cœur', description: 'Un nom qui porte une histoire, une présence et une chaleur que l’on garde près de soi.', power: 'Lien éternel' },
+  { name: 'Le prout de mimi', type: 'Événement mémorable', description: 'Un moment inoubliable qui fait sourire et rire tous ceux qui y assistent. Sauf boubou', power: 'Rire contagieux' },
+  { name: 'Le rire de mimi', type: 'Événement mémorable', description: 'Un éclat de rire qui réchauffe les cœurs et illumine la pièce.', power: 'Joie contagieuse' },
+  { name: 'Mimi', type: 'Personnage central', description: 'Le cœur de toutes les histoires, apportant joie et lumière partout où elle va.', power: 'Charme irrésistible' },
+  { name: 'Le boudage de mimi', type: 'Événement mémorable', description: 'Un moment où mimi boude, apportant une touche de drame et de tendresse à la scène.', power: 'Charme mélancolique' }
+]
+
+export const stellarCards: CardDefinition[] = [
+  { name: 'L’étoile Mathilde', type: 'Lumière du souvenir', description: 'Une étoile douce qui veille dans le ciel et garde avec tendresse la mémoire de Mathilde.', power: 'Amour qui demeure' }
 ]
 
 function addCardData(
@@ -166,6 +173,7 @@ export const cards: Card[] = [
   ...addCardData(epicCards, 'Épique', 'violet', '✧'),
   ...addCardData(legendaryCards, 'Légendaire', 'gold', '★'),
   ...addCardData(extraordinaryCards, 'Extraordinaire', 'rainbow', '♥'),
+  ...addCardData(stellarCards, 'Stellaire', 'silver', '✩'),
 ]
 
 // Take 1 common, 1 rare, 1 epic, and 1 legendary card for example
@@ -182,4 +190,5 @@ export const rarityDetails: Array<{ name: Rarity; description: string; color: st
   { name: 'Épique', description: 'Des histoires vraiment extraordinaires', color: 'epic' },
   { name: 'Légendaire', description: 'Une magie que l’on ne voit qu’une fois', color: 'legendary' },
   { name: 'Extraordinaire', description: 'Une carte unique, cachée dans les étoiles', color: 'extraordinary' },
+  { name: 'Stellaire', description: 'Une carte brillante et rare, venue des confins de l’univers', color: 'stellar' },
 ]

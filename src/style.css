@@ -46,32 +46,35 @@ button { font: inherit; }
 }
 
 .ui-card__meta {
-  font-size: clamp(.42rem, 3.5cqw, .5625rem);
+  font-size: clamp(.42rem, 3.5cqw, .8rem);
   letter-spacing: .12em;
   line-height: 1.25;
 }
 
 .ui-card__symbol {
-  font-size: clamp(3rem, 26cqw, 6rem);
+  font-size: clamp(3rem, 26cqw, 7rem);
   line-height: 1;
 }
 
 .ui-card__name {
-  font-size: clamp(.9rem, 10.5cqw, 1.5rem);
-  line-height: 1;
+  font-size: clamp(.9rem, 10.5cqw, 2rem);
+  line-height: .95;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .ui-card__description {
-  font-size: clamp(.52rem, 4.1cqw, .625rem);
+  font-size: clamp(.52rem, 4.1cqw, .9rem);
   line-height: 1.35;
 }
 
 .ui-card__badge {
-  font-size: clamp(.42rem, 3.5cqw, .5625rem);
+  font-size: clamp(.42rem, 3.5cqw, .75rem);
   line-height: 1;
+  padding: clamp(.25rem, 1.4cqw, .5rem) clamp(.6rem, 2.3cqw, 1rem);
 }
 
 .ui-card--extraordinary > div {
@@ -150,6 +153,47 @@ button { font: inherit; }
   line-height: .8;
   text-shadow: 0 0 12px #fff3a8, 0 0 35px #ff9cce, 0 0 65px #8ce8ff;
   animation: mystery-pulse 2s ease-in-out infinite alternate;
+}
+
+.ui-card--stellar .ui-card__surface {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,.95) 0 1px, transparent 2px),
+    radial-gradient(circle at 78% 16%, rgba(219,232,255,.9) 0 1px, transparent 2px),
+    radial-gradient(circle at 64% 42%, rgba(255,220,132,.8) 0 1px, transparent 2px),
+    radial-gradient(circle at 28% 72%, rgba(190,216,255,.85) 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 78%, rgba(255,255,255,.9) 0 1px, transparent 2px),
+    linear-gradient(145deg, #0d1a35, #172b50 52%, #080f24);
+  background-size: 90px 90px, 130px 130px, 150px 150px, 120px 120px, 170px 170px, auto;
+  isolation: isolate;
+  position: relative;
+}
+
+.ui-card--stellar .ui-card__surface::after {
+  background: linear-gradient(115deg, transparent 25%, rgba(255,255,255,.32) 48%, transparent 68%);
+  content: '';
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(-120%);
+  transition: transform .9s ease;
+}
+
+.ui-card--stellar .ui-card__surface > * {
+  position: relative;
+  z-index: 1;
+}
+
+.ui-card--stellar:hover .ui-card__surface::after {
+  transform: translateX(120%);
+}
+
+.rarity-stellar {
+  background:
+    radial-gradient(circle at 75% 20%, rgba(196,218,255,.2), transparent 35%),
+    linear-gradient(145deg, #0d1a35, #172b50);
+  border-color: rgba(226, 189, 114, .45);
+  box-shadow: 0 0 35px rgba(107, 145, 215, .18);
+  color: #e8efff;
 }
 
 @keyframes rainbow-frame {
@@ -379,6 +423,17 @@ button { font: inherit; }
   background: conic-gradient(from 0deg, #ff8db8, #ffe27b, #9de8ff, #c99cff, #ff8db8);
   filter: blur(8px);
   box-shadow: 0 0 35px 12px rgba(255,211,125,.8), 0 0 90px 30px rgba(197,135,255,.55);
+}
+
+.effect-stellar {
+  animation: stellar-pulse 2.4s ease-in-out infinite alternate;
+  background: radial-gradient(circle, rgba(255,255,255,.95) 0 7%, rgba(176,207,255,.55) 20%, transparent 68%);
+  box-shadow: 0 0 28px 12px rgba(219,232,255,.8), 0 0 85px 32px rgba(72,113,190,.55);
+}
+
+@keyframes stellar-pulse {
+  from { opacity: .7; transform: scale(.9); }
+  to { opacity: 1; transform: scale(1.08); }
 }
 
 @keyframes common-glow {

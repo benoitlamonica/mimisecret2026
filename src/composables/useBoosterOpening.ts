@@ -1,7 +1,8 @@
 import { onBeforeUnmount, ref } from 'vue'
 import { useLocalStorage } from '@/composables/useLocalStorage'
-import type { Card, Rarity } from '@/data/cards'
+import { cards, type Card, type Rarity } from '@/data/cards'
 import { drawBooster, drawSpecialBooster, drawSpecialDayBooster, SPECIAL_DAYS } from '@/config/booster'
+import { notifyStellarUnlock } from '@/composables/useStellarUnlock'
 
 export function useBoosterOpening() {
   const boosterCards = ref<Card[]>([])
@@ -20,12 +21,26 @@ export function useBoosterOpening() {
 
     boosterCards.value = cards
     collection.value = [...collection.value, ...boosterCards.value]
+    unlockStellarIfComplete()
     revealedCards.value = new Set()
     boosterPhase.value = 'pack'
     isCutting.value = false
     isDraggingPack.value = false
     packDragProgress.value = 0
     isOpening.value = true
+  }
+
+  function unlockStellarIfComplete() {
+    const stellarCard = cards.find((card) => card.rarity === 'Stellaire')
+    const collectibleCards = cards.filter((card) => card.rarity !== 'Stellaire')
+    if (
+      stellarCard
+      && !collection.value.some((card) => card.id === stellarCard.id)
+      && collectibleCards.every((card) => collection.value.some((ownedCard) => ownedCard.id === card.id))
+    ) {
+      collection.value = [...collection.value, stellarCard]
+      notifyStellarUnlock(stellarCard)
+    }
   }
 
   function openBooster(day?: number) {
@@ -96,6 +111,7 @@ export function useBoosterOpening() {
       Épique: 'effect-epic',
       Légendaire: 'effect-legendary',
       Extraordinaire: 'effect-extraordinary',
+      Stellaire: 'effect-stellar',
     }[rarity]
   }
 

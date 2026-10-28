@@ -58,7 +58,7 @@ const purchasableCards = computed(() => {
   const search = searchTerm.value.trim().toLocaleLowerCase()
 
   return cards.filter((card) => {
-    if (card.rarity === 'Extraordinaire') return false
+    if (card.rarity === 'Extraordinaire' || card.rarity === 'Stellaire') return false
     if (activeFilter.value !== 'Toutes' && card.rarity !== activeFilter.value) return false
     return !search || card.name.toLocaleLowerCase().includes(search)
   })

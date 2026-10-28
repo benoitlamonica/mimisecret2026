@@ -62,7 +62,7 @@ const selectedCard = ref<Card | null>(null)
 
       <section class="bg-[#152331] px-6 py-24 lg:px-10">
         <div class="mx-auto max-w-7xl">
-          <div class="mb-12 max-w-xl"><p class="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">À collectionner</p><h2 class="font-display text-5xl text-[#fff8e9]">Chaque carte a son éclat.</h2><p class="mt-5 leading-relaxed text-[#94a8b0]">Des trouvailles délicates aux trésors les plus convoités, cinq niveaux de rareté rendent chaque ouverture unique.</p></div>
+          <div class="mb-12 max-w-xl"><p class="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">À collectionner</p><h2 class="font-display text-5xl text-[#fff8e9]">Chaque carte a son éclat.</h2><p class="mt-5 leading-relaxed text-[#94a8b0]">Des trouvailles délicates au trésor stellaire ultime, six niveaux de rareté rendent chaque ouverture unique.</p></div>
           <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <div
               v-for="(rarity, index) in rarityDetails"
@@ -70,7 +70,7 @@ const selectedCard = ref<Card | null>(null)
               :class="`rarity-${rarity.color}`"
               class="rounded-2xl border border-white/10 bg-[#1b2c3b] p-6 transition hover:-translate-y-1"
             >
-              <div class="mb-12 flex items-center justify-between"><span class="font-display text-4xl">{{ rarity.name === 'Extraordinaire' ? '✹' : rarity.name === 'Légendaire' ? '★' : rarity.name === 'Épique' ? '✧' : rarity.name === 'Rare' ? '◆' : '✦' }}</span><span class="text-[10px] uppercase tracking-[.2em] text-[#84969e]">{{ String(index + 1).padStart(2, '0') }} / {{ rarityDetails.length }}</span></div>
+              <div class="mb-12 flex items-center justify-between"><span class="font-display text-4xl">{{ rarity.name === 'Stellaire' ? '✩' : rarity.name === 'Extraordinaire' ? '✹' : rarity.name === 'Légendaire' ? '★' : rarity.name === 'Épique' ? '✧' : rarity.name === 'Rare' ? '◆' : '✦' }}</span><span class="text-[10px] uppercase tracking-[.2em] text-[#84969e]">{{ String(index + 1).padStart(2, '0') }} / {{ rarityDetails.length }}</span></div>
               <h3 class="font-display text-2xl text-[#f8f2e5]">{{ rarity.name }}</h3><p class="mt-2 text-sm leading-relaxed text-[#8fa0aa]">{{ rarity.description }}</p>
             </div>
           </div>

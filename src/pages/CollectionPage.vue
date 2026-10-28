@@ -11,7 +11,7 @@ import { cards, type Card, type Rarity } from '@/data/cards'
 
 type Filter = 'Toutes' | Rarity
 
-const filters: Filter[] = ['Toutes', 'Commun', 'Rare', 'Épique', 'Légendaire', 'Extraordinaire']
+const filters: Filter[] = ['Toutes', 'Commun', 'Rare', 'Épique', 'Légendaire', 'Extraordinaire', 'Stellaire']
 const activeFilter = ref<Filter>('Toutes')
 const selectedCard = ref<Card | null>(null)
 const isSellModalOpen = ref(false)
@@ -110,7 +110,7 @@ function confirmSellDuplicates() {
             <UiCard
               :card="card"
               :disabled="count === 0"
-              :mystery="card.rarity === 'Extraordinaire' && count === 0"
+              :mystery="(card.rarity === 'Extraordinaire' || card.rarity === 'Stellaire') && count === 0"
               @click="selectedCard = card"
             />
             <span

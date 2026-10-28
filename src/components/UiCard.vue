@@ -41,6 +41,12 @@ const rarityStyles: Record<Rarity, { frame: string; badge: string; glow: string;
     glow: 'shadow-[0_0_55px_rgba(255,182,117,.45)]',
     symbol: 'text-[#ff72b6]',
   },
+  Stellaire: {
+    frame: 'from-[#f4d57d] via-[#f7f9ff] to-[#9daabd]',
+    badge: 'bg-linear-to-r from-[#f7d98b] to-[#dce7f8] text-[#263653]',
+    glow: 'shadow-[0_0_55px_rgba(177,201,255,.5)]',
+    symbol: 'text-[#dce9ff]',
+  },
 }
 
 const style = () => rarityStyles[props.card.rarity]
@@ -50,9 +56,9 @@ const style = () => rarityStyles[props.card.rarity]
   <button
     :disabled="disabled"
     :aria-disabled="disabled"
-    :class="{ 'ui-card--rare': card.rarity === 'Rare', 'ui-card--epic': card.rarity === 'Épique', 'ui-card--legendary': card.rarity === 'Légendaire', 'ui-card--extraordinary': card.rarity === 'Extraordinaire' }"
+    :class="{ 'ui-card--rare': card.rarity === 'Rare', 'ui-card--epic': card.rarity === 'Épique', 'ui-card--legendary': card.rarity === 'Légendaire', 'ui-card--extraordinary': card.rarity === 'Extraordinaire', 'ui-card--stellar': card.rarity === 'Stellaire' }"
     class="ui-card group w-full text-left disabled:cursor-not-allowed"
-    :aria-label="mystery ? 'Carte extraordinaire mystérieuse' : `Voir la carte ${card.name}`"
+    :aria-label="mystery ? `Carte ${card.rarity.toLocaleLowerCase()} verrouillée` : `Voir la carte ${card.name}`"
   >
     <div
       :class="[style().glow, `bg-linear-to-br ${style().frame}`, { 'opacity-35 grayscale': disabled && !mystery, 'group-hover:-translate-y-2': !disabled }]"
@@ -63,7 +69,7 @@ const style = () => rarityStyles[props.card.rarity]
           v-if="mystery"
           class="ui-card__mystery grid h-full place-items-center text-center"
         >
-          <div><span class="ui-card__mystery-mark">?</span><p class="mt-3 text-[10px] uppercase tracking-[.2em] text-[#e2bd72]">Carte secrète</p></div>
+          <div><span class="ui-card__mystery-mark">?</span><p class="mt-3 text-[10px] uppercase tracking-[.2em] text-[#e2bd72]">{{ card.rarity === 'Stellaire' ? 'Carte stellaire verrouillée' : 'Carte secrète' }}</p></div>
         </div>
         <template v-else>
           <div class="ui-card__meta flex justify-between uppercase text-[#b5c3c4]">
