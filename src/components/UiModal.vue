@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, watch } from 'vue'
+import UiButton from '@/components/UiButton.vue'
 
 const props = withDefaults(defineProps<{
   dismissible?: boolean
@@ -37,7 +38,7 @@ onBeforeUnmount(() => {
   <Teleport to="body">
     <div v-if="isOpen" class="fixed inset-0 z-40 grid place-items-center overflow-y-auto bg-[#09111a]/80 p-5 backdrop-blur-sm" @click.self="close">
       <section :class="panelClass" class="relative my-auto w-full rounded-2xl border border-[#e2bd72]/40 bg-[#172536] p-7 shadow-2xl" role="dialog" aria-modal="true" :aria-label="ariaLabel">
-        <button v-if="showClose && dismissible" aria-label="Fermer" class="absolute right-5 top-4 z-10 text-2xl text-[#9aabb1] transition hover:text-white" @click="close">×</button>
+        <UiButton v-if="showClose && dismissible" variant="ghost" aria-label="Fermer" class="absolute right-5 top-4 z-10 p-0 text-2xl no-underline transition hover:text-white" @click="close">×</UiButton>
         <slot />
       </section>
     </div>

@@ -421,3 +421,11 @@ button { font: inherit; }
     flex-basis: 9.5rem;
   }
 }
+
+.point-wheel {
+  transition: transform 3.2s cubic-bezier(.15,.75,.2,1);
+}
+
+.point-wheel--spinning {
+  transition-duration: 3.2s;
+}

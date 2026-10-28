@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import AppHeader from '@/components/AppHeader.vue'
 import BoosterOpeningOverlay from '@/components/BoosterOpeningOverlay.vue'
+import PointWheel from '@/components/PointWheel.vue'
 import UiButton from '@/components/UiButton.vue'
 import UiModal from '@/components/UiModal.vue'
 import { useAdventCalendar } from '@/composables/useAdventCalendar'
 import { useDailyQuiz } from '@/composables/useDailyQuiz'
+import { useDailyWheel, type WheelReward, wheelSegmentCount, wheelSegments } from '@/composables/useDailyWheel'
 
 const {
   claimDay,
@@ -30,10 +32,25 @@ const {
   startQuiz,
   points,
 } = useDailyQuiz()
+const { canSpin, spin } = useDailyWheel()
 
 const boosterOverlay = ref<{ isOpening: { value: boolean }; open: () => void } | null>(null)
 const availableQuizzes = computed(() => Math.max(0, unlockedDays.value - completedDays.value.length))
 const canStartQuiz = computed(() => availableQuizzes.value > 0)
+const isWheelSpinning = ref(false)
+const wheelRotation = ref(0)
+const wheelReward = ref<WheelReward | null>(null)
+const isWheelRewardModalOpen = computed({
+  get: () => wheelReward.value !== null,
+  set: (isOpen) => {
+    if (!isOpen) wheelReward.value = null
+  },
+})
+let wheelTimeout: ReturnType<typeof setTimeout> | undefined
+
+onBeforeUnmount(() => {
+  if (wheelTimeout) clearTimeout(wheelTimeout)
+})
 
 function openFreeBooster(day: number) {
   if (boosterOverlay.value?.isOpening.value) return
@@ -49,6 +66,26 @@ function startNextQuiz() {
     .find((candidate) => !isDayCompleted(candidate))
 
   if (day) startQuiz(day)
+}
+
+function spinWheel() {
+  const reward = spin()
+  if (!reward) return
+
+  const matchingSegments = wheelSegments
+    .map((candidate, index) => candidate.points === reward.points ? index : -1)
+    .filter((index) => index >= 0)
+  const segmentIndex = matchingSegments[Math.floor(Math.random() * matchingSegments.length)] ?? 0
+  const midpoint = (segmentIndex + 0.5) / wheelSegmentCount * 360
+  const currentAngle = wheelRotation.value % 360
+  const correction = (360 - midpoint - currentAngle + 360) % 360
+  wheelRotation.value += 1800 + correction
+  isWheelSpinning.value = true
+  wheelTimeout = setTimeout(() => {
+    isWheelSpinning.value = false
+    wheelReward.value = reward
+    wheelTimeout = undefined
+  }, 3200)
 }
 </script>
 
@@ -85,13 +122,22 @@ function startNextQuiz() {
         </div>
         <div class="rounded-2xl border border-white/10 bg-[#172536]/70 p-5 md:p-8">
           <div class="grid grid-cols-6 gap-2 sm:grid-cols-8 md:grid-cols-12 md:gap-3">
-            <button v-for="day in totalDays" :key="day" :disabled="!isDayUnlocked(day) || isDayClaimed(day)" :class="isDayClaimed(day) ? 'border-[#537382] bg-[#2b4654] text-[#c2d2d3]' : isDayUnlocked(day) ? 'border-[#d6b975]/60 bg-[#d6b975]/10 text-[#e2bd72] hover:bg-[#e2bd72] hover:text-[#172536]' : 'border-white/10 bg-white/3 text-[#71858e]'" class="aspect-square rounded-lg border text-sm font-bold transition disabled:cursor-not-allowed md:rounded-xl" @click="openFreeBooster(day)">{{ String(day).padStart(2, '0') }}</button>
+            <UiButton v-for="day in totalDays" :key="day" variant="ghost" :disabled="!isDayUnlocked(day) || isDayClaimed(day)" :class="[isDayClaimed(day) ? 'border-[#537382] bg-[#2b4654] text-[#c2d2d3]' : isDayUnlocked(day) ? 'border-[#d6b975]/60 bg-[#d6b975]/10 text-[#e2bd72] hover:bg-[#e2bd72] hover:text-[#172536]' : 'border-white/10 bg-white/3 text-[#71858e]', 'aspect-square rounded-lg border px-0 py-0 text-sm font-bold no-underline transition disabled:cursor-not-allowed md:rounded-xl']" @click="openFreeBooster(day)">{{ String(day).padStart(2, '0') }}</UiButton>
           </div>
           <div class="mt-6 flex flex-wrap items-center justify-between gap-4">
             <p class="text-sm text-[#8fa0aa]">{{ unlockedDays === 0 ? 'Le calendrier ouvre bientôt.' : `${availableQuizzes} quiz restant${availableQuizzes > 1 ? 's' : ''} à utiliser.` }}</p>
             <UiButton variant="secondary" :disabled="!canStartQuiz" @click="startNextQuiz">Répondre au défi du jour</UiButton>
           </div>
         </div>
+      </section>
+
+      <section class="grid items-center gap-10 py-12 lg:grid-cols-[.8fr_1.2fr]">
+        <div>
+          <p class="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Une chance par jour</p>
+          <h2 class="font-display text-5xl text-[#fff8e9]">La roue de Mimi</h2>
+          <p class="mt-5 leading-relaxed text-[#9cafb6]">Lance la roue pour gagner uniquement des points Mimi. Le jackpot de 100 points est unique et très rare.</p>
+        </div>
+        <PointWheel :disabled="!canSpin" :spinning="isWheelSpinning" :rotation="wheelRotation" @spin="spinWheel" />
       </section>
     </main>
 
@@ -105,7 +151,7 @@ function startNextQuiz() {
         </div>
         <p class="mb-7 text-xl leading-relaxed text-[#f7f3ea]">{{ currentQuestion?.name }}</p>
         <div class="grid gap-3">
-          <button v-for="option in currentQuestion?.options" :key="option" :disabled="quizAnswerSubmitted" :class="selectedAnswer === option ? 'border-[#e2bd72] bg-[#e2bd72]/15 text-[#fff8e9]' : 'border-white/10 bg-white/3 text-[#b9c5cc]'" class="rounded-xl border px-4 py-3 text-left transition hover:border-[#e2bd72] disabled:cursor-not-allowed" @click="selectAnswer(option)">{{ option }}</button>
+          <UiButton v-for="option in currentQuestion?.options" :key="option" variant="ghost" :disabled="quizAnswerSubmitted" :class="[selectedAnswer === option ? 'border-[#e2bd72] bg-[#e2bd72]/15 text-[#fff8e9]' : 'border-white/10 bg-white/3 text-[#b9c5cc]', 'w-full justify-start rounded-xl border px-4 py-3 text-left no-underline transition hover:border-[#e2bd72] disabled:cursor-not-allowed']" @click="selectAnswer(option)">{{ option }}</UiButton>
         </div>
         <p v-if="quizAnswerSubmitted" class="mt-5 text-sm" :class="selectedAnswer === currentQuestion?.answer ? 'text-emerald-300' : 'text-rose-300'">{{ selectedAnswer === currentQuestion?.answer ? 'Bonne réponse ! +10 points' : `La bonne réponse était : ${currentQuestion?.answer}` }}</p>
         <div class="mt-8 flex justify-end">
@@ -114,5 +160,14 @@ function startNextQuiz() {
     </UiModal>
 
     <BoosterOpeningOverlay ref="boosterOverlay" />
+
+    <UiModal v-if="wheelReward" v-model="isWheelRewardModalOpen" panel-class="max-w-sm" aria-label="Récompense de la roue">
+      <div class="text-center">
+        <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Récompense obtenue</p>
+        <h2 class="mt-3 font-display text-6xl text-[#f2d58d]">+{{ wheelReward.points }}</h2>
+        <p class="mt-2 text-sm uppercase tracking-[.2em] text-[#aebdc2]">points Mimi · {{ wheelReward.label }}</p>
+        <UiButton class="mt-8 w-full" @click="wheelReward = null">Continuer</UiButton>
+      </div>
+    </UiModal>
   </div>
 </template>
