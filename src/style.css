@@ -331,9 +331,11 @@ button { font: inherit; }
   margin: 0 auto;
   overflow-x: auto;
   padding: 2rem 1.5rem 3rem;
+  scroll-snap-type: x mandatory;
   scroll-padding-inline: 1.5rem;
   scrollbar-color: #687f8b #172536;
   scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .booster-circle-card {
@@ -342,6 +344,7 @@ button { font: inherit; }
   opacity: 0;
   animation: deal-card-line .7s cubic-bezier(.2,.8,.2,1) forwards;
   animation-delay: calc(var(--card-index) * 120ms);
+  scroll-snap-align: center;
 }
 
 .booster-flip {
@@ -360,6 +363,7 @@ button { font: inherit; }
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .booster-card__back {
@@ -475,12 +479,12 @@ button { font: inherit; }
 @media (max-width: 640px) {
   .booster-circle {
     min-height: 28rem;
-    padding-inline: 1rem;
+    padding-inline: 1.25rem;
     scroll-padding-inline: 1rem;
   }
 
   .booster-circle-card {
-    flex-basis: 9.5rem;
+    flex-basis: min(78vw, 19rem);
   }
 }
 

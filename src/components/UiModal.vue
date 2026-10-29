@@ -2,6 +2,10 @@
 import { onBeforeUnmount, watch } from 'vue'
 import UiButton from '@/components/UiButton.vue'
 
+let openModalCount = 0
+let previousBodyOverflow = ''
+let previousDocumentOverflow = ''
+
 const props = withDefaults(defineProps<{
   dismissible?: boolean
   showClose?: boolean
@@ -15,6 +19,33 @@ const props = withDefaults(defineProps<{
 })
 
 const isOpen = defineModel<boolean>({ required: true })
+let hasScrollLock = false
+
+function lockBodyScroll() {
+  if (hasScrollLock) return
+
+  if (openModalCount === 0) {
+    previousBodyOverflow = document.body.style.overflow
+    previousDocumentOverflow = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+  }
+
+  openModalCount += 1
+  hasScrollLock = true
+}
+
+function unlockBodyScroll() {
+  if (!hasScrollLock) return
+
+  openModalCount = Math.max(0, openModalCount - 1)
+  if (openModalCount === 0) {
+    document.body.style.overflow = previousBodyOverflow
+    document.documentElement.style.overflow = previousDocumentOverflow
+  }
+
+  hasScrollLock = false
+}
 
 function close() {
   if (props.dismissible) isOpen.value = false
@@ -25,12 +56,18 @@ function handleKeydown(event: KeyboardEvent) {
 }
 
 watch(isOpen, (open) => {
-  if (open) window.addEventListener('keydown', handleKeydown)
-  else window.removeEventListener('keydown', handleKeydown)
+  if (open) {
+    window.addEventListener('keydown', handleKeydown)
+    lockBodyScroll()
+  } else {
+    window.removeEventListener('keydown', handleKeydown)
+    unlockBodyScroll()
+  }
 }, { immediate: true })
 
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleKeydown)
+  unlockBodyScroll()
 })
 </script>
 
