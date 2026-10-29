@@ -75,12 +75,12 @@ onBeforeUnmount(() => {
   <Teleport to="body">
     <div
       v-if="isOpen"
-      class="fixed inset-0 z-40 grid place-items-center overflow-y-auto bg-[#09111a]/80 p-5 backdrop-blur-sm"
+      class="fixed inset-0 z-40 flex min-h-full items-start justify-center overflow-y-auto bg-[#09111a]/80 p-5 backdrop-blur-sm"
       @click.self="close"
     >
       <section
         :class="panelClass"
-        class="relative my-auto w-full rounded-2xl border border-[#e2bd72]/40 bg-[#172536] p-7 shadow-2xl"
+        class="relative my-5 w-full rounded-2xl border border-[#e2bd72]/40 bg-[#172536] p-7 shadow-2xl"
         role="dialog"
         aria-modal="true"
         :aria-label="ariaLabel"
