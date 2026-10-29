@@ -202,6 +202,7 @@ function completeScratch() {
           <p class="mb-3 text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Les tickets de Mimi</p>
           <h2 class="font-display text-5xl text-[#fff8e9]">Tente ta chance</h2>
           <p class="mt-4 max-w-xl leading-relaxed text-[#9cafb6]">Gratte tes tickets pour gagner des points ou une nouvelle carte. Chaque ticket coûte {{ SCRATCH_TICKET_COST }} points.</p>
+          <p class="secret-hint mt-4 max-w-xl text-sm leading-relaxed">Dans la boutique, un parfum de cacao attend peut-être entre deux tickets.</p>
         </div>
         <div class="grid gap-6 md:grid-cols-2">
           <article class="relative overflow-hidden rounded-2xl border border-[#e2bd72]/40 bg-linear-to-br from-[#4c3525] to-[#172536] p-8">

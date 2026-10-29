@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, ref, useTemplateRef } from 'vue'
 import AppHeader from '@/components/AppHeader.vue'
 import BoosterOpeningOverlay from '@/components/BoosterOpeningOverlay.vue'
 import ClickGameModal from '@/components/ClickGameModal.vue'
+import ShuffleCardsModal from '@/components/ShuffleCardsModal.vue'
 import PointWheel from '@/components/PointWheel.vue'
 import UiButton from '@/components/UiButton.vue'
 import UiModal from '@/components/UiModal.vue'
@@ -10,6 +11,7 @@ import { useAdventCalendar } from '@/composables/useAdventCalendar'
 import { useDailyQuiz } from '@/composables/useDailyQuiz'
 import { useDailyWheel, type WheelReward, wheelSegmentCount, wheelSegments } from '@/composables/useDailyWheel'
 import { useClickGame } from '@/composables/useClickGame'
+import { useShuffleCardsGame } from '@/composables/useShuffleCardsGame'
 
 const {
   claimDay,
@@ -44,6 +46,18 @@ const {
   remainingSeconds,
   startGame: startClickGame,
 } = useClickGame()
+const {
+  availableGames: availableShuffleGames,
+  cards: shuffleCards,
+  close: closeShuffleGame,
+  hasShuffled: hasShuffledCards,
+  isOpen: isShuffleGameOpen,
+  isShuffling: isShuffleGameShuffling,
+  selectedCard: shuffleSelectedCard,
+  selectCard: selectShuffleCard,
+  shuffle: shuffleCardsNow,
+  startGame: startShuffleGame,
+} = useShuffleCardsGame()
 
 const boosterOverlay = useTemplateRef<InstanceType<typeof BoosterOpeningOverlay>>('booster-overlay')
 const availableQuizzes = computed(() => Math.max(0, unlockedDays.value - completedDays.value.length))
@@ -140,6 +154,7 @@ function recordClick() {
             </UiButton>
           </div>
         </div>
+        <p class="secret-hint mt-6 rounded-xl border border-[#e2bd72]/20 bg-[#172536]/60 p-4 text-sm leading-relaxed">Un détail du calendrier évoque une course interrompue par une horloge peu coopérative.</p>
       </section>
 
       <section class="py-12">
@@ -148,7 +163,7 @@ function recordClick() {
           <h2 class="font-display text-5xl text-[#fff8e9]">Les mini-jeux</h2>
           <p class="mt-4 max-w-2xl leading-relaxed text-[#9cafb6]">Chaque mini-jeu gagne une partie par jour débloqué. Les parties non jouées s’accumulent.</p>
         </div>
-        <div class="grid gap-4 md:grid-cols-3">
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <article class="rounded-2xl border border-[#e2bd72]/30 bg-[#172536] p-6">
             <p class="text-xs font-bold uppercase tracking-[.2em] text-[#e2bd72]">Quiz</p>
             <h3 class="mt-2 font-display text-3xl text-[#fff8e9]">Le défi de Mimi</h3>
@@ -191,6 +206,20 @@ function recordClick() {
               Ouvrir la roue
             </UiButton>
           </article>
+          <article class="rounded-2xl border border-[#9daabd]/30 bg-[#172536] p-6">
+            <p class="text-xs font-bold uppercase tracking-[.2em] text-[#dce9ff]">Mémoire</p>
+            <h3 class="mt-2 font-display text-3xl text-[#fff8e9]">Le choix de Mimi</h3>
+            <p class="mt-3 text-sm text-[#9cafb6]">Mélange cinq cartes spéciales et choisis celle que tu veux garder.</p>
+            <p class="mt-5 font-bold text-[#dce9ff]">{{ availableShuffleGames }} partie{{ availableShuffleGames > 1 ? 's' : '' }} restante{{ availableShuffleGames > 1 ? 's' : '' }}</p>
+            <UiButton
+              variant="secondary"
+              class="mt-5 w-full"
+              :disabled="availableShuffleGames === 0"
+              @click="startShuffleGame"
+            >
+              Jouer au choix
+            </UiButton>
+          </article>
         </div>
       </section>
     </main>
@@ -202,6 +231,17 @@ function recordClick() {
       :remaining-seconds="remainingSeconds"
       @click="recordClick"
       @close="closeClickGame"
+    />
+
+    <ShuffleCardsModal
+      v-model="isShuffleGameOpen"
+      :cards="shuffleCards"
+      :has-shuffled="hasShuffledCards"
+      :is-shuffling="isShuffleGameShuffling"
+      :selected-card="shuffleSelectedCard"
+      @close="closeShuffleGame"
+      @select="selectShuffleCard"
+      @shuffle="shuffleCardsNow"
     />
 
     <UiModal

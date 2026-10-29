@@ -20,6 +20,16 @@ button { font: inherit; }
 #nl-badge,
 #nl-badge-frame { display: none !important; }
 
+.secret-hint {
+  color: #172536;
+  user-select: text;
+}
+
+.secret-hint::selection {
+  color: #172536;
+  background: #e2bd72;
+}
+
 .snow-drift {
   background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,.9) 0 1px, transparent 1.5px),
     radial-gradient(circle at 80% 60%, rgba(255,255,255,.7) 0 1px, transparent 1.5px);
@@ -408,6 +418,72 @@ button { font: inherit; }
 .booster-card-front > .rarity-burst + button {
   position: relative;
   z-index: 1;
+}
+
+.shuffle-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: .75rem;
+}
+
+.shuffle-card {
+  position: relative;
+  aspect-ratio: .72;
+  min-width: 0;
+  animation: shuffle-card-in .45s ease both;
+  animation-delay: calc(var(--shuffle-index) * 90ms);
+}
+
+.shuffle-card.is-shuffling {
+  animation: shuffle-card-mix 1.8s ease-in-out both;
+  animation-delay: calc(var(--shuffle-index) * 80ms);
+}
+
+.shuffle-card__inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform .8s cubic-bezier(.2,.8,.2,1);
+}
+
+.shuffle-card__inner.is-back {
+  transform: rotateY(180deg);
+}
+
+.shuffle-card__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.shuffle-card__back {
+  cursor: pointer;
+  min-width: 0;
+  transform: rotateY(180deg);
+  transition: box-shadow .25s ease, transform .25s ease;
+}
+
+.shuffle-card__back:not(:disabled):hover {
+  box-shadow: 0 0 35px rgba(226,189,114,.38);
+  transform: rotateY(180deg) translateY(-.5rem);
+}
+
+@keyframes shuffle-card-in {
+  from { opacity: 0; transform: translateY(1.5rem) rotate(-4deg); }
+  to { opacity: 1; transform: translateY(0) rotate(0); }
+}
+
+@keyframes shuffle-card-mix {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  25% { transform: translate(calc((var(--shuffle-index) - 2) * 1.2rem), -1rem) rotate(calc((var(--shuffle-index) - 2) * 8deg)); }
+  60% { transform: translate(calc((2 - var(--shuffle-index)) * .8rem), .75rem) rotate(calc((2 - var(--shuffle-index)) * 6deg)); }
+}
+
+@media (max-width: 640px) {
+  .shuffle-cards-grid {
+    gap: .4rem;
+  }
 }
 
 .effect-common {

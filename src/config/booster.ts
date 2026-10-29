@@ -5,6 +5,7 @@ export type RarityTable = Array<{ rarity: Rarity; threshold: number }>
 
 export const SPECIAL_DAYS = [1, 12, 24]
 
+// Standard booster rarities
 const STANDARD_RARITIES: RarityTable = [
   { rarity: 'Extraordinaire', threshold: 0.1 },
   { rarity: 'Légendaire', threshold: 1.1 },
@@ -20,6 +21,7 @@ const GUARANTEED_RARITIES: RarityTable = [
   { rarity: 'Rare', threshold: 100 },
 ]
 
+// Special booster rarities
 const SPECIAL_BOOSTER_RARITIES: RarityTable = [
   { rarity: 'Extraordinaire', threshold: 2 },
   { rarity: 'Légendaire', threshold: 20 },
@@ -28,13 +30,14 @@ const SPECIAL_BOOSTER_RARITIES: RarityTable = [
 ]
 
 const SPECIAL_BOOSTER_GUARANTEED_RARITIES: RarityTable = [
-  { rarity: 'Extraordinaire', threshold: 10 },
-  { rarity: 'Légendaire', threshold: 50 },
+  { rarity: 'Extraordinaire', threshold: 5 },
+  { rarity: 'Légendaire', threshold: 30 },
   { rarity: 'Épique', threshold: 100 },
 ]
 
+// Special day booster rarities
 const SPECIAL_DAY_BOOSTER: RarityTable = [
-  { rarity: 'Extraordinaire', threshold: 10 },
+  { rarity: 'Extraordinaire', threshold: 5 },
   { rarity: 'Légendaire', threshold: 80 },
   { rarity: 'Épique', threshold: 100 },
 ]

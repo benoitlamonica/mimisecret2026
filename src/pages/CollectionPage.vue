@@ -56,6 +56,7 @@ function confirmSellDuplicates() {
             <div>
               <h1 class="font-display text-6xl leading-none text-[#fff9ed] md:text-8xl">Ma collection</h1>
               <p class="mt-6 max-w-xl text-lg leading-relaxed text-[#b9c5cc]">Toutes les merveilles découvertes dans tes boosters, soigneusement conservées jusqu’au grand soir.</p>
+              <p class="secret-hint mt-4 max-w-xl text-sm leading-relaxed">Entre deux cartes, un petit tabouret d’atelier semble attendre son propriétaire.</p>
             </div>
             <div class="flex gap-8 border-l border-white/10 pl-8">
               <div><p class="font-display text-4xl text-[#e2bd72]">{{ collection.length }}</p><p class="mt-1 text-xs uppercase tracking-widest text-[#84969e]">cartes</p></div>

@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import UiButton from '@/components/UiButton.vue'
 import UiModal from '@/components/UiModal.vue'
 import { usePoints } from '@/composables/usePoints'
+import { useRewardCodes } from '@/composables/useRewardCodes'
 import { exportProgress, importProgress } from '@/composables/useProgressTransfer'
 
 const route = useRoute()
@@ -14,6 +15,10 @@ const exportCode = ref('')
 const importCode = ref('')
 const transferMessage = ref('')
 const transferError = ref(false)
+const rewardCode = ref('')
+const rewardMessage = ref('')
+const rewardError = ref(false)
+const { redeemCode } = useRewardCodes()
 const navLinks = [
   { path: '/calendar', label: 'Calendrier', icon: '▦' },
   { path: '/shop', label: 'Boutique', icon: '◇' },
@@ -33,7 +38,23 @@ function openProgressModal() {
   importCode.value = ''
   transferMessage.value = ''
   transferError.value = false
+  rewardCode.value = ''
+  rewardMessage.value = ''
+  rewardError.value = false
   isProgressModalOpen.value = true
+}
+
+function redeemRewardCode() {
+  try {
+    const reward = redeemCode(rewardCode.value)
+    rewardCode.value = ''
+    rewardError.value = false
+    rewardMessage.value = `Code validé : +${reward.points} points Mimi.`
+  } catch (error) {
+    console.error('Impossible de valider le code de récompense.', error)
+    rewardError.value = true
+    rewardMessage.value = error instanceof Error ? error.message : 'Impossible de valider ce code.'
+  }
 }
 
 async function copyExportCode() {
@@ -131,7 +152,7 @@ function loadProgress() {
     <div class="pr-8">
       <p class="text-xs font-bold uppercase tracking-[.25em] text-[#e2bd72]">Paramètres</p>
       <h2 class="mt-2 font-display text-4xl text-[#fff8e9]">Ma progression</h2>
-      <p class="mt-3 text-sm leading-relaxed text-[#9cafb6]">Exporte ton code pour le conserver ou le transférer sur un autre appareil. L’import remplacera la progression présente sur cet appareil.</p>
+      <p class="mt-3 text-sm leading-relaxed text-[#9cafb6]">Exporte ton code pour le conserver ou le transférer sur un autre appareil. L’import remplacera la progression présente sur cet appareil. Ouvre l’œil : Mimi cache aussi des indices de codes dans son univers.</p>
     </div>
 
     <div class="mt-7 space-y-6">
@@ -176,6 +197,38 @@ function loadProgress() {
         >
           Importer et remplacer
         </UiButton>
+      </div>
+
+      <div class="border-t border-white/10 pt-6">
+        <label
+          for="reward-code"
+          class="mb-2 block text-sm font-bold text-[#d9e3e5]"
+        >Entrer un code</label>
+        <p class="mb-3 text-sm leading-relaxed text-[#9cafb6]">Saisis un code de Mimi pour recevoir des points. Chaque code ne peut être utilisé qu’une seule fois et s’écrit en lettres majuscules, sans espace.</p>
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <input
+            id="reward-code"
+            v-model="rewardCode"
+            type="text"
+            autocomplete="off"
+            placeholder="Ex. MIMI2026"
+            class="min-w-0 flex-1 rounded-xl border border-white/10 bg-[#101a26] px-4 py-3 text-sm uppercase tracking-[.12em] text-[#b9c5cc] outline-none placeholder:normal-case placeholder:tracking-normal placeholder:text-[#71858e] focus:border-[#e2bd72]"
+            @keyup.enter="redeemRewardCode"
+          >
+          <UiButton
+            :disabled="!rewardCode.trim()"
+            @click="redeemRewardCode"
+          >
+            Valider
+          </UiButton>
+        </div>
+        <p
+          v-if="rewardMessage"
+          class="mt-3 text-sm"
+          :class="rewardError ? 'text-rose-300' : 'text-emerald-300'"
+        >
+          {{ rewardMessage }}
+        </p>
       </div>
 
       <p

@@ -4,6 +4,7 @@ import AppHeader from '@/components/AppHeader.vue'
 import CardDetailModal from '@/components/CardDetailModal.vue'
 import UiButton from '@/components/UiButton.vue'
 import UiCard from '@/components/UiCard.vue'
+import { rewardCodeHints } from '@/config/codes'
 import { exempleCards, rarityDetails, type Card } from '@/data/cards'
 
 const selectedCard = ref<Card | null>(null)
@@ -61,6 +62,26 @@ const selectedCard = ref<Card | null>(null)
         </div>
       </section>
 
+      <section class="bg-[#152331] px-6 py-24 lg:px-10">
+        <div class="mx-auto max-w-7xl">
+          <div class="mb-10 max-w-2xl">
+            <p class="mb-3 text-xs font-bold uppercase tracking-[.3em] text-[#e2bd72]">Les murmures de Mimi</p>
+            <h2 class="font-display text-5xl text-[#fff8e9]">Des codes se cachent dans la neige.</h2>
+            <p class="mt-5 leading-relaxed text-[#9cafb6]">Certains mots de passe rapportent des points. Cherche les indices disséminés dans les pages, puis teste tes trouvailles dans les paramètres. Certains indices sont discrets : sélectionne les zones qui semblent étrangement silencieuses. Chaque code ne fonctionne qu’une seule fois.</p>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <p
+              v-for="(hint, index) in rewardCodeHints"
+              :key="hint"
+              class="secret-hint rounded-2xl border border-[#e2bd72]/20 bg-[#172536] p-5 text-sm leading-relaxed"
+            >
+              <span class="mb-3 block font-display text-2xl text-[#e2bd72]">✦ {{ String(index + 1).padStart(2, '0') }}</span>
+              {{ hint }}
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section class="relative overflow-hidden bg-[#101a26] px-6 py-24 lg:px-10">
         <div class="absolute -left-32 top-20 h-80 w-80 rounded-full bg-[#31576a]/20 blur-3xl"></div>
         <div class="relative mx-auto max-w-7xl">
@@ -102,7 +123,7 @@ const selectedCard = ref<Card | null>(null)
             <h2 class="font-display text-5xl text-[#fff8e9]">Les points sont la clé.</h2>
             <p class="mt-5 leading-relaxed text-[#9cafb6]">Chaque point gagné rapproche la collection de son dernier éclat. Les mini-jeux sont gratuits et se renouvellent avec les jours du calendrier.</p>
           </div>
-          <div class="grid gap-4 sm:grid-cols-3">
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <article class="rounded-2xl border border-white/10 bg-[#172536] p-5">
               <p class="text-xs font-bold uppercase tracking-[.2em] text-[#e2bd72]">Quiz</p>
               <p class="mt-3 font-display text-3xl text-[#fff8e9]">20 pts</p>
@@ -117,6 +138,11 @@ const selectedCard = ref<Card | null>(null)
               <p class="text-xs font-bold uppercase tracking-[.2em] text-[#d99bc5]">Roue</p>
               <p class="mt-3 font-display text-3xl text-[#fff8e9]">0 à 100</p>
               <p class="mt-2 text-sm leading-relaxed text-[#8fa0aa]">Un gain aléatoire : 0, 10, 20, 30, 50 ou 100 points.</p>
+            </article>
+            <article class="rounded-2xl border border-white/10 bg-[#172536] p-5">
+              <p class="text-xs font-bold uppercase tracking-[.2em] text-[#dce9ff]">Choix de Mimi</p>
+              <p class="mt-3 font-display text-3xl text-[#fff8e9]">1 carte</p>
+              <p class="mt-2 text-sm leading-relaxed text-[#8fa0aa]">Cinq cartes spéciales se mélangent : choisis-en une seule pour l’ajouter à ta collection.</p>
             </article>
           </div>
         </div>
