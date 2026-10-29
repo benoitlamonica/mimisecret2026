@@ -17,6 +17,7 @@
 html { scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; }
 button { font: inherit; }
+#nl-badge { display: none !important; }
 
 .snow-drift {
   background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,.9) 0 1px, transparent 1.5px),
