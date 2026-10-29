@@ -39,7 +39,10 @@ const emit = defineEmits<{
 
     <UiButton
       v-if="isPlaying"
-      class="h-40 w-full text-2xl md:h-48"
+      class="click-game-target h-40 w-full text-2xl md:h-48"
+      @contextmenu.prevent
+      @dragstart.prevent
+      @selectstart.prevent
       @click="emit('click')"
     >
       CLIQUE !
